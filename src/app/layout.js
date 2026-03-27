@@ -1,13 +1,26 @@
-import { Geist, Geist_Mono, Scheherazade_New } from "next/font/google";
+import {
+  Scheherazade_New,
+  DM_Serif_Text,
+  DM_Serif_Display,
+  Rakkas,
+} from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const Rakkasfont = Rakkas({
+  variable: "--font-rakkas",
+  subsets: ["arabic"],
+  weight: "400",
+});
+
+const DMSerifText = DM_Serif_Text({
+  weight: "400",
+  variable: "--font-dm-serif-text",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const DMSerifDisplay = DM_Serif_Display({
+  weight: "400",
+  variable: "--font-dm-serif-display",
   subsets: ["latin"],
 });
 
@@ -18,7 +31,7 @@ const scheherazade = Scheherazade_New({
 });
 
 export const metadata = {
-  title: "Rabt",
+  title: "Itqaan",
   description: "Quran memorization tools",
 };
 
@@ -26,7 +39,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${scheherazade.variable} h-full antialiased`}>
+      className={`${Rakkasfont.variable} ${DMSerifText.variable} ${DMSerifDisplay.variable} ${scheherazade.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

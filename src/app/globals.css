@@ -4,11 +4,12 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --font-arabic: var(--font-scheherazade);
+  --font-display: var(--font-dm-serif-display);
+  --font-body: var(--font-dm-serif-text);
+  --font-rakkas: var(--font-rakkas);
 }
 
 body {
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
 }

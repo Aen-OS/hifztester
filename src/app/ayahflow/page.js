@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ScopeSelector from "@/components/ayahflow/ScopeSelector";
 import DifficultySelector from "@/components/ayahflow/DifficultySelector";
 import DirectionToggle from "@/components/ayahflow/DirectionToggle";
+import BackButton from "@/components/BackButton";
 
 export default function AyahFlowSetup() {
   const router = useRouter();
@@ -24,7 +25,8 @@ export default function AyahFlowSetup() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12">
-      <h1 className="text-3xl font-bold">AyahFlow</h1>
+      <BackButton />
+      <h1 className="mt-4 text-3xl font-bold">AyahFlow</h1>
       <p className="mt-1 text-gray-500">
         Guess the next ayah from multiple choices
       </p>

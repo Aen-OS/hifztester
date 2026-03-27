@@ -2,7 +2,10 @@
 
 import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { fetchVersesForScope, fetchSurahForDistractors } from "@/lib/fetch-verses";
+import {
+  fetchVersesForScope,
+  fetchSurahForDistractors,
+} from "@/lib/fetch-verses";
 import {
   createPromptQueue,
   buildVerseMap,
@@ -13,6 +16,7 @@ import {
 import QuestionCard from "@/components/ayahflow/QuestionCard";
 import ChoiceGrid from "@/components/ayahflow/ChoiceGrid";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
+import BackButton from "@/components/BackButton";
 
 const NEXT_DELAY_MS = 1200;
 
@@ -21,7 +25,8 @@ function AyahFlowGameInner() {
   const searchParams = useSearchParams();
 
   const scopeType = searchParams.get("scopeType");
-  const scopeValues = searchParams.get("scopeValues")?.split(",").map(Number) ?? [];
+  const scopeValues =
+    searchParams.get("scopeValues")?.split(",").map(Number) ?? [];
   const difficulty = searchParams.get("difficulty") ?? "easy";
   const testPrevious = searchParams.get("testPrevious") === "true";
 
@@ -70,24 +75,22 @@ function AyahFlowGameInner() {
     load();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getSurahVerses = useCallback(
-    async (chapterId) => {
-      if (surahCacheRef.current[chapterId]) return surahCacheRef.current[chapterId];
+  const getSurahVerses = useCallback(async (chapterId) => {
+    if (surahCacheRef.current[chapterId])
+      return surahCacheRef.current[chapterId];
 
-      const fetched = await fetchSurahForDistractors(chapterId);
-      surahCacheRef.current[chapterId] = fetched;
+    const fetched = await fetchSurahForDistractors(chapterId);
+    surahCacheRef.current[chapterId] = fetched;
 
-      const newMap = new Map(verseMapRef.current);
-      for (const v of fetched) {
-        if (!newMap.has(v.verseKey)) newMap.set(v.verseKey, v);
-      }
-      verseMapRef.current = newMap;
-      setVerseMap(newMap);
+    const newMap = new Map(verseMapRef.current);
+    for (const v of fetched) {
+      if (!newMap.has(v.verseKey)) newMap.set(v.verseKey, v);
+    }
+    verseMapRef.current = newMap;
+    setVerseMap(newMap);
 
-      return fetched;
-    },
-    []
-  );
+    return fetched;
+  }, []);
 
   useEffect(() => {
     if (promptQueue.length === 0 || loading) return;
@@ -103,7 +106,7 @@ function AyahFlowGameInner() {
       const correctVerse = verseMapRef.current.get(correctVerseKey);
 
       let surahVerses = verses.filter(
-        (v) => v.chapterId === correctVerse.chapterId
+        (v) => v.chapterId === correctVerse.chapterId,
       );
       if (difficulty !== "easy") {
         surahVerses = await getSurahVerses(correctVerse.chapterId);
@@ -115,7 +118,7 @@ function AyahFlowGameInner() {
         difficulty,
         verseMapRef.current,
         verses,
-        surahVerses
+        surahVerses,
       );
       setQuestion(q);
       setSelectedKey(null);
@@ -173,8 +176,7 @@ function AyahFlowGameInner() {
           <p className="text-sm text-red-600">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 rounded-lg bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-700"
-          >
+            className="mt-4 rounded-lg bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-700">
             Retry
           </button>
         </div>
@@ -183,12 +185,15 @@ function AyahFlowGameInner() {
   }
 
   if (showResults) {
-    const pct = score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
+    const pct =
+      score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold">Session Complete</h2>
-          <p className="mt-4 text-4xl font-bold">{score.correct}/{score.total}</p>
+          <p className="mt-4 text-4xl font-bold">
+            {score.correct}/{score.total}
+          </p>
           <p className="mt-1 text-gray-500">{pct}% accuracy</p>
           <div className="mt-8 flex gap-3">
             <button
@@ -200,14 +205,12 @@ function AyahFlowGameInner() {
                 setPromptIndex(0);
                 setPhase("next");
               }}
-              className="rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-700"
-            >
+              className="rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-700">
               Play Again
             </button>
             <button
               onClick={() => router.push("/ayahflow")}
-              className="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-medium hover:bg-gray-50"
-            >
+              className="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-medium hover:bg-gray-50">
               New Settings
             </button>
           </div>
@@ -220,12 +223,12 @@ function AyahFlowGameInner() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
+      <BackButton />
+      <div className="mt-4 mb-6 flex items-center justify-between">
         <ScoreCounter correct={score.correct} total={score.total} />
         <button
           onClick={handleEnd}
-          className="rounded-lg border border-gray-200 px-4 py-1.5 text-sm hover:bg-gray-50"
-        >
+          className="rounded-lg border border-gray-200 px-4 py-1.5 text-sm hover:bg-gray-50">
           End
         </button>
       </div>
@@ -251,8 +254,7 @@ export default function AyahFlowGame() {
         <div className="flex min-h-screen items-center justify-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
         </div>
-      }
-    >
+      }>
       <AyahFlowGameInner />
     </Suspense>
   );

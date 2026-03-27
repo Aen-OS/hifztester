@@ -4,6 +4,7 @@ import client from "./quran-client";
 
 const TRANSLATION_ID = "131"; // Sahih International
 const VERSE_FIELDS = { textUthmani: true };
+const MAX_PER_PAGE = 50; // API maximum
 const FETCH_OPTS = { fields: VERSE_FIELDS, translations: [TRANSLATION_ID] };
 
 function normalizeVerse(raw) {
@@ -20,34 +21,49 @@ function normalizeVerse(raw) {
   };
 }
 
-// The @quranjs/api SDK's findByChapter, findByJuz, findByPage,
-// and findByHizb all return Promise<Verse[]> (flat arrays).
-// The SDK handles pagination internally.
+// The SDK does NOT auto-paginate; each call returns one page (max 50).
+// We paginate manually until all verses are fetched.
+
+async function fetchAllPages(fetchFn, id) {
+  const all = [];
+  let page = 1;
+  while (true) {
+    const batch = await fetchFn(id, {
+      ...FETCH_OPTS,
+      perPage: MAX_PER_PAGE,
+      page,
+    });
+    all.push(...batch);
+    if (batch.length < MAX_PER_PAGE) break;
+    page++;
+  }
+  return all;
+}
 
 async function fetchByChapters(chapterIds) {
   const results = await Promise.all(
-    chapterIds.map((id) => client.verses.findByChapter(id, FETCH_OPTS))
+    chapterIds.map((id) => fetchAllPages(client.verses.findByChapter.bind(client.verses), id)),
   );
   return results.flat();
 }
 
 async function fetchByJuzs(juzIds) {
   const results = await Promise.all(
-    juzIds.map((id) => client.verses.findByJuz(id, FETCH_OPTS))
+    juzIds.map((id) => fetchAllPages(client.verses.findByJuz.bind(client.verses), id)),
   );
   return results.flat();
 }
 
 async function fetchByPages(pageNumbers) {
   const results = await Promise.all(
-    pageNumbers.map((num) => client.verses.findByPage(num, FETCH_OPTS))
+    pageNumbers.map((num) => fetchAllPages(client.verses.findByPage.bind(client.verses), num)),
   );
   return results.flat();
 }
 
 async function fetchByHizbs(hizbIds) {
   const results = await Promise.all(
-    hizbIds.map((id) => client.verses.findByHizb(id, FETCH_OPTS))
+    hizbIds.map((id) => fetchAllPages(client.verses.findByHizb.bind(client.verses), id)),
   );
   return results.flat();
 }
@@ -63,18 +79,120 @@ async function fetchVerseByKey(verseKey) {
 // Ayah counts per surah. Source: @quranjs/api versesMapping.
 const SURAH_AYAH_COUNTS = [
   0, // index 0 unused
-  7, 286, 200, 176, 120, 165, 206, 75, 129, 109,   // 1-10
-  123, 111, 43, 52, 99, 128, 111, 110, 98, 135,     // 11-20
-  112, 78, 118, 64, 77, 227, 93, 88, 69, 60,        // 21-30
-  34, 30, 73, 54, 45, 83, 182, 88, 75, 85,          // 31-40
-  54, 53, 89, 59, 37, 35, 38, 29, 18, 45,           // 41-50
-  60, 49, 62, 55, 78, 96, 29, 22, 24, 13,           // 51-60
-  14, 11, 11, 18, 12, 12, 30, 52, 52, 44,           // 61-70
-  28, 28, 20, 56, 40, 31, 50, 40, 46, 42,           // 71-80
-  29, 19, 36, 25, 22, 17, 19, 26, 30, 20,           // 81-90
-  15, 21, 11, 8, 8, 19, 5, 8, 8, 11,                // 91-100
-  11, 8, 3, 9, 5, 4, 7, 3, 6, 3,                    // 101-110
-  5, 4, 5, 6,                                         // 111-114
+  7,
+  286,
+  200,
+  176,
+  120,
+  165,
+  206,
+  75,
+  129,
+  109, // 1-10
+  123,
+  111,
+  43,
+  52,
+  99,
+  128,
+  111,
+  110,
+  98,
+  135, // 11-20
+  112,
+  78,
+  118,
+  64,
+  77,
+  227,
+  93,
+  88,
+  69,
+  60, // 21-30
+  34,
+  30,
+  73,
+  54,
+  45,
+  83,
+  182,
+  88,
+  75,
+  85, // 31-40
+  54,
+  53,
+  89,
+  59,
+  37,
+  35,
+  38,
+  29,
+  18,
+  45, // 41-50
+  60,
+  49,
+  62,
+  55,
+  78,
+  96,
+  29,
+  22,
+  24,
+  13, // 51-60
+  14,
+  11,
+  11,
+  18,
+  12,
+  12,
+  30,
+  52,
+  52,
+  44, // 61-70
+  28,
+  28,
+  20,
+  56,
+  40,
+  31,
+  50,
+  40,
+  46,
+  42, // 71-80
+  29,
+  19,
+  36,
+  25,
+  22,
+  17,
+  19,
+  26,
+  30,
+  20, // 81-90
+  15,
+  21,
+  11,
+  8,
+  8,
+  19,
+  5,
+  8,
+  8,
+  11, // 91-100
+  11,
+  8,
+  3,
+  9,
+  5,
+  4,
+  7,
+  3,
+  6,
+  3, // 101-110
+  5,
+  4,
+  5,
+  6, // 111-114
 ];
 
 function getNextVerseKey(verseKey) {
