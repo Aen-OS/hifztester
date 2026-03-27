@@ -5,6 +5,7 @@ import {
   Rakkas,
 } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 
 const Rakkasfont = Rakkas({
   variable: "--font-rakkas",
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${Rakkasfont.variable} ${DMSerifText.variable} ${DMSerifDisplay.variable} ${scheherazade.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
+      <Analytics />
     </html>
   );
 }
