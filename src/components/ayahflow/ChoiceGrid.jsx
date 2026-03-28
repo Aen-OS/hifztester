@@ -2,7 +2,7 @@
 
 import ChoiceCard from "./ChoiceCard";
 
-export default function ChoiceGrid({ choices, correctKey, selectedKey, onSelect }) {
+export default function ChoiceGrid({ choices, correctKey, selectedKey, onSelect, eliminatedKeys = [] }) {
   function getState(choice) {
     if (!selectedKey) return "default";
     if (choice.verseKey === selectedKey && choice.verseKey === correctKey) return "correct";
@@ -11,9 +11,13 @@ export default function ChoiceGrid({ choices, correctKey, selectedKey, onSelect 
     return "default";
   }
 
+  const visibleChoices = eliminatedKeys.length > 0
+    ? choices.filter((c) => !eliminatedKeys.includes(c.verseKey))
+    : choices;
+
   return (
     <div className="grid gap-3 sm:grid-cols-2">
-      {choices.map((choice) => (
+      {visibleChoices.map((choice) => (
         <ChoiceCard
           key={choice.verseKey}
           verse={choice}
