@@ -18,8 +18,13 @@ import ChoiceGrid from "@/components/ayahflow/ChoiceGrid";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
 import BackButton from "@/components/BackButton";
 import HintBar from "@/components/ayahflow/HintBar";
+import AnswerModeToggle from "@/components/ayahflow/AnswerModeToggle";
+import TypingInput from "@/components/ayahflow/TypingInput";
+import DiffView from "@/components/ayahflow/DiffView";
+import { diffWords } from "@/lib/normalize-arabic";
 
 const NEXT_DELAY_MS = 1200;
+const TYPING_WRONG_DELAY_MS = 3000;
 
 function AyahFlowGameInner() {
   const router = useRouter();
@@ -30,6 +35,7 @@ function AyahFlowGameInner() {
     searchParams.get("scopeValues")?.split(",").map(Number) ?? [];
   const difficulty = searchParams.get("difficulty") ?? "easy";
   const testPrevious = searchParams.get("testPrevious") === "true";
+  const initialMode = searchParams.get("mode") ?? "choices";
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,6 +53,8 @@ function AyahFlowGameInner() {
   const [fiftyFiftyRemaining, setFiftyFiftyRemaining] = useState(3);
   const [eliminatedKeys, setEliminatedKeys] = useState([]);
   const [fiftyFiftyUsedThisRound, setFiftyFiftyUsedThisRound] = useState(false);
+  const [answerMode, setAnswerMode] = useState(initialMode);
+  const [typingDiff, setTypingDiff] = useState(null);
 
   const surahCacheRef = useRef({});
   const verseMapRef = useRef(new Map());
@@ -130,10 +138,27 @@ function AyahFlowGameInner() {
       setEliminatedKeys([]);
       setFiftyFiftyUsedThisRound(false);
       setSelectedKey(null);
+      setTypingDiff(null);
     }
 
     build();
   }, [promptQueue, promptIndex, phase, loading]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function advance() {
+    if (phase === "next" && testPrevious) {
+      setPhase("previous");
+    } else {
+      setPhase("next");
+      const nextIdx = promptIndex + 1;
+      if (nextIdx >= promptQueue.length) {
+        const newQueue = createPromptQueue(verses, boundaryKeys);
+        setPromptQueue(newQueue);
+        setPromptIndex(0);
+      } else {
+        setPromptIndex(nextIdx);
+      }
+    }
+  }
 
   function handleSelect(verseKey) {
     if (selectedKey) return;
@@ -146,20 +171,38 @@ function AyahFlowGameInner() {
     }));
 
     setTimeout(() => {
-      if (phase === "next" && testPrevious) {
-        setPhase("previous");
-      } else {
-        setPhase("next");
-        const nextIdx = promptIndex + 1;
-        if (nextIdx >= promptQueue.length) {
-          const newQueue = createPromptQueue(verses, boundaryKeys);
-          setPromptQueue(newQueue);
-          setPromptIndex(0);
-        } else {
-          setPromptIndex(nextIdx);
-        }
-      }
+      advance();
     }, NEXT_DELAY_MS);
+  }
+
+  function handleTypedSubmit(typedText) {
+    if (selectedKey) return;
+
+    const result = diffWords(typedText, question.correctAnswer.textUthmani);
+
+    if (result.isMatch) {
+      setSelectedKey(question.correctAnswer.verseKey);
+      setScore((prev) => ({
+        correct: prev.correct + 1,
+        total: prev.total + 1,
+      }));
+
+      setTimeout(() => {
+        advance();
+      }, NEXT_DELAY_MS);
+    } else {
+      setSelectedKey("__wrong__");
+      setTypingDiff(result);
+      setScore((prev) => ({
+        correct: prev.correct,
+        total: prev.total + 1,
+      }));
+
+      setTimeout(() => {
+        setTypingDiff(null);
+        advance();
+      }, TYPING_WRONG_DELAY_MS);
+    }
   }
 
   function handleEnd() {
@@ -266,18 +309,36 @@ function AyahFlowGameInner() {
           onToggleSurah={() => setSurahRevealed(true)}
           fiftyFiftyRemaining={fiftyFiftyRemaining}
           fiftyFiftyDisabled={fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedKey !== null}
+          fiftyFiftyHidden={answerMode === "type"}
           onFiftyFifty={handleFiftyFifty}
         />
       </div>
 
       <div className="mt-4">
-        <ChoiceGrid
-          choices={question.choices}
-          correctKey={question.correctAnswer.verseKey}
-          selectedKey={selectedKey}
-          onSelect={handleSelect}
-          eliminatedKeys={eliminatedKeys}
-        />
+        <AnswerModeToggle value={answerMode} onChange={setAnswerMode} />
+      </div>
+
+      <div className="mt-4">
+        {answerMode === "choices" ? (
+          <ChoiceGrid
+            choices={question.choices}
+            correctKey={question.correctAnswer.verseKey}
+            selectedKey={selectedKey}
+            onSelect={handleSelect}
+            eliminatedKeys={eliminatedKeys}
+          />
+        ) : typingDiff ? (
+          <DiffView diff={typingDiff} />
+        ) : selectedKey ? (
+          <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
+            <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed text-green-700">
+              {question.correctAnswer.textUthmani}
+            </p>
+            <p className="mt-2 text-sm text-green-600">Correct!</p>
+          </div>
+        ) : (
+          <TypingInput onSubmit={handleTypedSubmit} disabled={selectedKey !== null} />
+        )}
       </div>
     </div>
   );

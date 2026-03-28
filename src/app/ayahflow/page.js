@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ScopeSelector from "@/components/ayahflow/ScopeSelector";
 import DifficultySelector from "@/components/ayahflow/DifficultySelector";
 import DirectionToggle from "@/components/ayahflow/DirectionToggle";
+import AnswerModeSelector from "@/components/ayahflow/AnswerModeSelector";
 import BackButton from "@/components/BackButton";
 
 export default function AyahFlowSetup() {
@@ -12,12 +13,14 @@ export default function AyahFlowSetup() {
   const [scope, setScope] = useState({ type: "surah", values: [] });
   const [difficulty, setDifficulty] = useState("easy");
   const [testPrevious, setTestPrevious] = useState(false);
+  const [answerMode, setAnswerMode] = useState("choices");
 
   function handleStart() {
     const params = new URLSearchParams({
       scopeType: scope.type,
       scopeValues: scope.values.join(","),
       difficulty,
+      mode: answerMode,
       testPrevious: testPrevious.toString(),
     });
     router.push(`/ayahflow/play?${params.toString()}`);
@@ -44,6 +47,13 @@ export default function AyahFlowSetup() {
             Difficulty
           </h2>
           <DifficultySelector value={difficulty} onChange={setDifficulty} />
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">
+            Answer Mode
+          </h2>
+          <AnswerModeSelector value={answerMode} onChange={setAnswerMode} />
         </section>
 
         <section>

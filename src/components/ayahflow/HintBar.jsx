@@ -9,6 +9,7 @@ export default function HintBar({
   onToggleSurah,
   fiftyFiftyRemaining,
   fiftyFiftyDisabled,
+  fiftyFiftyHidden,
   onFiftyFifty,
 }) {
   return (
@@ -34,17 +35,19 @@ export default function HintBar({
         )}
       </div>
 
-      <button
-        onClick={onFiftyFifty}
-        disabled={fiftyFiftyDisabled}
-        className={`rounded-lg px-3 py-1 text-sm font-medium transition-colors ${
-          fiftyFiftyDisabled
-            ? "cursor-not-allowed border border-gray-100 text-gray-300"
-            : "border border-gray-200 text-gray-700 hover:bg-gray-50"
-        }`}
-      >
-        50/50 ({fiftyFiftyRemaining})
-      </button>
+      {!fiftyFiftyHidden && (
+        <button
+          onClick={onFiftyFifty}
+          disabled={fiftyFiftyDisabled}
+          className={`rounded-lg px-3 py-1 text-sm font-medium transition-colors ${
+            fiftyFiftyDisabled
+              ? "cursor-not-allowed border border-gray-100 text-gray-300"
+              : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+          }`}
+        >
+          50/50 ({fiftyFiftyRemaining})
+        </button>
+      )}
     </div>
   );
 }
