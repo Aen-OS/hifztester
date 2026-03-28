@@ -55,6 +55,22 @@ export default function ScopeSelector({ value, onChange }) {
 
   return (
     <div>
+      <button
+        onClick={() => {
+          const all = Array.from({ length: 114 }, (_, i) => i + 1);
+          setActiveTab("surah");
+          setSelections(all);
+          setRangeMode(false);
+          onChange({ type: "surah", values: all });
+        }}
+        className={`mb-3 w-full rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+          selections.length === 114 && activeTab === "surah"
+            ? "border-gray-900 bg-gray-900 text-white"
+            : "border-gray-200 text-gray-700 hover:border-gray-400 hover:bg-gray-50"
+        }`}
+      >
+        All 114 Surahs
+      </button>
       <div className="flex gap-1 rounded-lg bg-gray-100 p-1">
         {SCOPE_TYPES.map((t) => (
           <button

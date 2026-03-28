@@ -15,6 +15,26 @@ export default function Home() {
           description="Given an ayah, guess what comes next. Test your memorization with multiple choice."
           href="/ayahflow"
         />
+        <GameCard
+          title="SurahSense"
+          description="Identify the surah from a page, ayah, group of ayaat, or its summary."
+          href="/surahsense"
+        />
+      </div>
+      <div>
+        <div className="mt-12 w-full rounded-xl border border-gray-200 p-4 text-left hover:border-gray-400 hover:bg-gray-50">
+          <h3 className="font-bold">Roadmap</h3>
+          <div className="">
+            <h4>Phase 1</h4>
+            <p></p>
+          </div>
+          <div>
+            <h4>Phase 2</h4>
+          </div>
+          <div>
+            <h4>Phase 3</h4>
+          </div>
+        </div>
       </div>
     </div>
   );
