@@ -17,6 +17,7 @@ import QuestionCard from "@/components/ayahflow/QuestionCard";
 import ChoiceGrid from "@/components/ayahflow/ChoiceGrid";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
 import BackButton from "@/components/BackButton";
+import HintBar from "@/components/ayahflow/HintBar";
 
 const NEXT_DELAY_MS = 1200;
 
@@ -42,6 +43,10 @@ function AyahFlowGameInner() {
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [phase, setPhase] = useState("next");
   const [showResults, setShowResults] = useState(false);
+  const [surahRevealed, setSurahRevealed] = useState(false);
+  const [fiftyFiftyRemaining, setFiftyFiftyRemaining] = useState(3);
+  const [eliminatedKeys, setEliminatedKeys] = useState([]);
+  const [fiftyFiftyUsedThisRound, setFiftyFiftyUsedThisRound] = useState(false);
 
   const surahCacheRef = useRef({});
   const verseMapRef = useRef(new Map());
@@ -121,6 +126,9 @@ function AyahFlowGameInner() {
         surahVerses,
       );
       setQuestion(q);
+      setSurahRevealed(false);
+      setEliminatedKeys([]);
+      setFiftyFiftyUsedThisRound(false);
       setSelectedKey(null);
     }
 
@@ -156,6 +164,20 @@ function AyahFlowGameInner() {
 
   function handleEnd() {
     setShowResults(true);
+  }
+
+  function handleFiftyFifty() {
+    if (fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedKey) return;
+
+    const incorrectChoices = question.choices.filter(
+      (c) => c.verseKey !== question.correctAnswer.verseKey,
+    );
+    const shuffled = incorrectChoices.sort(() => Math.random() - 0.5);
+    const toEliminate = shuffled.slice(0, 2).map((c) => c.verseKey);
+
+    setEliminatedKeys(toEliminate);
+    setFiftyFiftyUsedThisRound(true);
+    setFiftyFiftyRemaining((prev) => prev - 1);
   }
 
   if (loading) {
@@ -200,6 +222,7 @@ function AyahFlowGameInner() {
               onClick={() => {
                 setShowResults(false);
                 setScore({ correct: 0, total: 0 });
+                setFiftyFiftyRemaining(3);
                 const newQueue = createPromptQueue(verses, boundaryKeys);
                 setPromptQueue(newQueue);
                 setPromptIndex(0);
@@ -235,12 +258,25 @@ function AyahFlowGameInner() {
 
       <QuestionCard verse={question.prompt} direction={question.direction} />
 
-      <div className="mt-6">
+      <div className="mt-4">
+        <HintBar
+          ayahNumber={question.prompt.verseNumber}
+          chapterId={question.prompt.chapterId}
+          surahRevealed={surahRevealed}
+          onToggleSurah={() => setSurahRevealed(true)}
+          fiftyFiftyRemaining={fiftyFiftyRemaining}
+          fiftyFiftyDisabled={fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedKey !== null}
+          onFiftyFifty={handleFiftyFifty}
+        />
+      </div>
+
+      <div className="mt-4">
         <ChoiceGrid
           choices={question.choices}
           correctKey={question.correctAnswer.verseKey}
           selectedKey={selectedKey}
           onSelect={handleSelect}
+          eliminatedKeys={eliminatedKeys}
         />
       </div>
     </div>
