@@ -10,6 +10,9 @@ export default function DisplayOptionsToggle({
   return (
     <div className="flex items-center gap-1.5">
       <button
+        role="switch"
+        aria-checked={translationEnabled}
+        aria-label="Toggle translation"
         onClick={onTranslationToggle}
         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs transition-colors ${
           translationEnabled
@@ -31,6 +34,9 @@ export default function DisplayOptionsToggle({
         </div>
       </button>
       <button
+        role="switch"
+        aria-checked={transliterationEnabled}
+        aria-label="Toggle transliteration"
         onClick={onTransliterationToggle}
         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs transition-colors ${
           transliterationEnabled

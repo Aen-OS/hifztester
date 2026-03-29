@@ -68,9 +68,12 @@ export default function AyahFlowSetup() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-medium uppercase tracking-wide text-gray-500">
             Display Options
           </h2>
+          <p className="mb-3 mt-1 text-xs text-gray-400">
+            Choose what to show alongside the Arabic text
+          </p>
           <DisplayOptionsSelector
             translationEnabled={translationEnabled}
             onTranslationEnabledChange={setTranslationEnabled}

@@ -12,8 +12,7 @@ export default function DisplayOptionsSelector({
   onTransliterationEnabledChange,
 }) {
   return (
-    <div>
-      <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2">
         {/* Translation control */}
         <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-lg border border-gray-200 px-4 py-3">
           <div className="flex items-center gap-3">
@@ -69,7 +68,6 @@ export default function DisplayOptionsSelector({
           </button>
           <span className="text-sm font-medium">Transliteration</span>
         </div>
-      </div>
     </div>
   );
 }
