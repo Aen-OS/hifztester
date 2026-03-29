@@ -1,13 +1,25 @@
 "use server";
 
 import client from "./quran-client";
+import { DEFAULT_TRANSLATION_ID } from "./translations";
 
-const TRANSLATION_ID = "131"; // Sahih International
 const VERSE_FIELDS = { textUthmani: true };
 const MAX_PER_PAGE = 50; // API maximum
-const FETCH_OPTS = { fields: VERSE_FIELDS, translations: [TRANSLATION_ID] };
+
+function buildFetchOpts(translationId) {
+  return {
+    fields: VERSE_FIELDS,
+    translations: [translationId],
+    words: true,
+  };
+}
 
 function normalizeVerse(raw) {
+  const transliteration = (raw.words ?? [])
+    .filter((w) => w.charTypeName === "word")
+    .map((w) => w.transliteration?.text ?? "")
+    .join(" ");
+
   return {
     id: raw.id,
     verseKey: raw.verseKey,
@@ -15,6 +27,7 @@ function normalizeVerse(raw) {
     verseNumber: raw.verseNumber,
     textUthmani: raw.textUthmani,
     translation: raw.translations?.[0]?.text ?? "",
+    transliteration,
     juzNumber: raw.juzNumber,
     hizbNumber: raw.hizbNumber,
     pageNumber: raw.pageNumber,
@@ -24,12 +37,12 @@ function normalizeVerse(raw) {
 // The SDK does NOT auto-paginate; each call returns one page (max 50).
 // We paginate manually until all verses are fetched.
 
-async function fetchAllPages(fetchFn, id) {
+async function fetchAllPages(fetchFn, id, opts) {
   const all = [];
   let page = 1;
   while (true) {
     const batch = await fetchFn(id, {
-      ...FETCH_OPTS,
+      ...opts,
       perPage: MAX_PER_PAGE,
       page,
     });
@@ -40,39 +53,36 @@ async function fetchAllPages(fetchFn, id) {
   return all;
 }
 
-async function fetchByChapters(chapterIds) {
+async function fetchByChapters(chapterIds, opts) {
   const results = await Promise.all(
-    chapterIds.map((id) => fetchAllPages(client.verses.findByChapter.bind(client.verses), id)),
+    chapterIds.map((id) => fetchAllPages(client.verses.findByChapter.bind(client.verses), id, opts)),
   );
   return results.flat();
 }
 
-async function fetchByJuzs(juzIds) {
+async function fetchByJuzs(juzIds, opts) {
   const results = await Promise.all(
-    juzIds.map((id) => fetchAllPages(client.verses.findByJuz.bind(client.verses), id)),
+    juzIds.map((id) => fetchAllPages(client.verses.findByJuz.bind(client.verses), id, opts)),
   );
   return results.flat();
 }
 
-async function fetchByPages(pageNumbers) {
+async function fetchByPages(pageNumbers, opts) {
   const results = await Promise.all(
-    pageNumbers.map((num) => fetchAllPages(client.verses.findByPage.bind(client.verses), num)),
+    pageNumbers.map((num) => fetchAllPages(client.verses.findByPage.bind(client.verses), num, opts)),
   );
   return results.flat();
 }
 
-async function fetchByHizbs(hizbIds) {
+async function fetchByHizbs(hizbIds, opts) {
   const results = await Promise.all(
-    hizbIds.map((id) => fetchAllPages(client.verses.findByHizb.bind(client.verses), id)),
+    hizbIds.map((id) => fetchAllPages(client.verses.findByHizb.bind(client.verses), id, opts)),
   );
   return results.flat();
 }
 
-async function fetchVerseByKey(verseKey) {
-  const raw = await client.verses.findByKey(verseKey, {
-    fields: VERSE_FIELDS,
-    translations: [TRANSLATION_ID],
-  });
+async function fetchVerseByKey(verseKey, opts) {
+  const raw = await client.verses.findByKey(verseKey, opts);
   return raw;
 }
 
@@ -219,21 +229,22 @@ function getPrevVerseKey(verseKey) {
  * Returns { verses, boundaryKeys } where boundaryKeys is an Array
  * of verseKeys that should not be used as prompts.
  */
-export async function fetchVersesForScope(scopeType, scopeValues) {
+export async function fetchVersesForScope(scopeType, scopeValues, translationId = DEFAULT_TRANSLATION_ID) {
+  const opts = buildFetchOpts(translationId);
   let rawVerses;
 
   switch (scopeType) {
     case "surah":
-      rawVerses = await fetchByChapters(scopeValues);
+      rawVerses = await fetchByChapters(scopeValues, opts);
       break;
     case "juz":
-      rawVerses = await fetchByJuzs(scopeValues);
+      rawVerses = await fetchByJuzs(scopeValues, opts);
       break;
     case "page":
-      rawVerses = await fetchByPages(scopeValues);
+      rawVerses = await fetchByPages(scopeValues, opts);
       break;
     case "hizb":
-      rawVerses = await fetchByHizbs(scopeValues);
+      rawVerses = await fetchByHizbs(scopeValues, opts);
       break;
     default:
       throw new Error(`Unknown scope type: ${scopeType}`);
@@ -267,11 +278,11 @@ export async function fetchVersesForScope(scopeType, scopeValues) {
 
     if (!verseKeySet.has(prevOfFirst)) {
       boundaryKeys.add(prevOfFirst);
-      boundaryFetches.push(fetchVerseByKey(prevOfFirst));
+      boundaryFetches.push(fetchVerseByKey(prevOfFirst, opts));
     }
     if (!verseKeySet.has(nextOfLast)) {
       boundaryKeys.add(nextOfLast);
-      boundaryFetches.push(fetchVerseByKey(nextOfLast));
+      boundaryFetches.push(fetchVerseByKey(nextOfLast, opts));
     }
 
     for (let i = 0; i < verses.length - 1; i++) {
@@ -285,11 +296,11 @@ export async function fetchVersesForScope(scopeType, scopeValues) {
 
         if (!verseKeySet.has(nextOfBefore) && !boundaryKeys.has(nextOfBefore)) {
           boundaryKeys.add(nextOfBefore);
-          boundaryFetches.push(fetchVerseByKey(nextOfBefore));
+          boundaryFetches.push(fetchVerseByKey(nextOfBefore, opts));
         }
         if (!verseKeySet.has(prevOfAfter) && !boundaryKeys.has(prevOfAfter)) {
           boundaryKeys.add(prevOfAfter);
-          boundaryFetches.push(fetchVerseByKey(prevOfAfter));
+          boundaryFetches.push(fetchVerseByKey(prevOfAfter, opts));
         }
       }
     }
@@ -304,7 +315,8 @@ export async function fetchVersesForScope(scopeType, scopeValues) {
   };
 }
 
-export async function fetchSurahForDistractors(chapterId) {
-  const rawVerses = await client.verses.findByChapter(chapterId, FETCH_OPTS);
+export async function fetchSurahForDistractors(chapterId, translationId = DEFAULT_TRANSLATION_ID) {
+  const opts = buildFetchOpts(translationId);
+  const rawVerses = await client.verses.findByChapter(chapterId, opts);
   return rawVerses.map(normalizeVerse);
 }
