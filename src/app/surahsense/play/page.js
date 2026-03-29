@@ -16,6 +16,7 @@ import {
   getAyaatCount,
   pickRandomMode,
   matchSurahName,
+  redactSurahName,
   shuffle,
 } from "@/lib/surahsense-engine";
 import { SURAH_NAMES } from "@/lib/quran-data";
@@ -161,7 +162,7 @@ function SurahSenseGameInner() {
           const info = await getChapterInfoCached(surahId);
           setClue({
             type: "summary",
-            summary: info.summary,
+            summary: redactSurahName(info.summary, surahId),
             revelationPlace: info.revelationPlace,
             versesCount: info.versesCount,
           });

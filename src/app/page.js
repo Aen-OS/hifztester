@@ -21,7 +21,7 @@ export default function Home() {
           href="/surahsense"
         />
       </div>
-      <div>
+      {/* <div>
         <div className="mt-12 w-full rounded-xl border border-gray-200 p-4 text-left hover:border-gray-400 hover:bg-gray-50">
           <h3 className="font-bold">Roadmap</h3>
           <div className="">
@@ -35,7 +35,7 @@ export default function Home() {
             <h4>Phase 3</h4>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

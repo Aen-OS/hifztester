@@ -1,0 +1,95 @@
+<h2>Game Screen — Display Controls in Top Bar</h2>
+<p class="subtitle">Compact controls alongside existing score counter and end button</p>
+
+<div class="mockup">
+  <div class="mockup-header">AyahFlow Game — Top Bar</div>
+  <div class="mockup-body" style="padding: 16px 20px; background: #fff; font-family: system-ui, sans-serif;">
+
+    <!-- Top bar -->
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <!-- Left: score -->
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 14px; font-weight: 600; color: #111;">3/5</span>
+        <span style="font-size: 12px; color: #9ca3af;">60%</span>
+      </div>
+
+      <!-- Right: display toggles + end -->
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <!-- Translation pill toggle -->
+        <button style="display: flex; align-items: center; gap: 5px; padding: 4px 10px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb; cursor: pointer; font-size: 12px; color: #374151;">
+          <span style="font-size: 11px;">EN</span>
+          <div style="width: 28px; height: 16px; background: #111827; border-radius: 8px; position: relative;">
+            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: 2px; right: 2px;"></div>
+          </div>
+        </button>
+
+        <!-- Transliteration pill toggle -->
+        <button style="display: flex; align-items: center; gap: 5px; padding: 4px 10px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb; cursor: pointer; font-size: 12px; color: #9ca3af;">
+          <span style="font-size: 11px;">Aa</span>
+          <div style="width: 28px; height: 16px; background: #d1d5db; border-radius: 8px; position: relative;">
+            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px;"></div>
+          </div>
+        </button>
+
+        <button style="padding: 4px 14px; border: 1px solid #e5e7eb; border-radius: 8px; background: white; font-size: 13px; color: #374151; cursor: pointer;">End</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height: 32px;"></div>
+
+<h2>Game Screen — Question Card with All Display Options</h2>
+<p class="subtitle">Shows how Arabic, transliteration, and translation stack in a verse card</p>
+
+<div class="mockup">
+  <div class="mockup-header">QuestionCard — All enabled</div>
+  <div class="mockup-body" style="padding: 24px; background: #fff; font-family: system-ui, sans-serif; text-align: center;">
+    <p style="font-size: 13px; font-weight: 500; color: #6b7280; margin: 0 0 16px 0;">What comes next?</p>
+
+    <!-- Arabic -->
+    <p dir="rtl" lang="ar" style="font-size: 28px; line-height: 2; color: #111; margin: 0 0 12px 0; font-family: 'Scheherazade New', 'Traditional Arabic', serif;">
+      بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ
+    </p>
+
+    <!-- Transliteration -->
+    <p style="font-size: 14px; color: #6b7280; font-style: italic; margin: 0 0 8px 0;">
+      Bismillahir-Rahmanir-Raheem
+    </p>
+
+    <!-- Translation -->
+    <p style="font-size: 13px; color: #9ca3af; margin: 0;">
+      In the Name of Allah, the Most Gracious, the Most Merciful.
+    </p>
+  </div>
+</div>
+
+<div style="height: 32px;"></div>
+
+<div class="mockup">
+  <div class="mockup-header">QuestionCard — Translation only (transliteration off)</div>
+  <div class="mockup-body" style="padding: 24px; background: #fff; font-family: system-ui, sans-serif; text-align: center;">
+    <p style="font-size: 13px; font-weight: 500; color: #6b7280; margin: 0 0 16px 0;">What comes next?</p>
+
+    <p dir="rtl" lang="ar" style="font-size: 28px; line-height: 2; color: #111; margin: 0 0 12px 0; font-family: 'Scheherazade New', 'Traditional Arabic', serif;">
+      بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ
+    </p>
+
+    <p style="font-size: 13px; color: #9ca3af; margin: 0;">
+      In the Name of Allah, the Most Gracious, the Most Merciful.
+    </p>
+  </div>
+</div>
+
+<div style="height: 32px;"></div>
+
+<div class="mockup">
+  <div class="mockup-header">QuestionCard — Arabic only (both off)</div>
+  <div class="mockup-body" style="padding: 24px; background: #fff; font-family: system-ui, sans-serif; text-align: center;">
+    <p style="font-size: 13px; font-weight: 500; color: #6b7280; margin: 0 0 16px 0;">What comes next?</p>
+
+    <p dir="rtl" lang="ar" style="font-size: 28px; line-height: 2; color: #111; margin: 0;">
+      بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ
+    </p>
+  </div>
+</div>

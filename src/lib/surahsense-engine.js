@@ -98,6 +98,33 @@ export function pickRandomMode() {
   return ALL_MODES[Math.floor(Math.random() * ALL_MODES.length)];
 }
 
+/**
+ * Remove occurrences of the surah name from the summary text so the
+ * player cannot simply read it off the clue.  Handles common
+ * transliteration variants (with/without prefix, hyphens, apostrophes).
+ */
+export function redactSurahName(text, surahId) {
+  const name = SURAH_NAMES[surahId];
+  if (!name) return text;
+
+  // Build patterns: full name and the bare word after "Al-" / "Ash-" etc.
+  const variants = [name];
+  const dashIdx = name.indexOf("-");
+  if (dashIdx !== -1) {
+    variants.push(name.slice(dashIdx + 1)); // e.g. "Baqarah" from "Al-Baqarah"
+  }
+
+  for (const v of variants) {
+    // Escape regex specials first, then make hyphens/apostrophes flexible
+    const escaped = v
+      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      .replace(/[-']/g, "[-'\\s]?");
+    const re = new RegExp(`\\b${escaped}\\b`, "gi");
+    text = text.replace(re, "______");
+  }
+  return text;
+}
+
 export function matchSurahName(typed, correctId) {
   const correctName = SURAH_NAMES[correctId] || "";
   return typed.trim().toLowerCase() === correctName.toLowerCase();

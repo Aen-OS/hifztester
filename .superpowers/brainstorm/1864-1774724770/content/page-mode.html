@@ -1,0 +1,46 @@
+<h2>Page Mode: How to Display the Clue</h2>
+<p class="subtitle">Compare two approaches for showing a mushaf page as a surah clue</p>
+
+<div class="split">
+  <div class="mockup" data-choice="a" onclick="toggleSelect(this)">
+    <div class="mockup-header">A: Rendered Arabic Text</div>
+    <div class="mockup-body" style="background:#faf8f0;padding:20px;">
+      <div style="text-align:center;color:#8a7a5a;font-size:11px;margin-bottom:12px;font-family:system-ui;">Page 293</div>
+      <div style="direction:rtl;font-family:serif;font-size:15px;line-height:2.2;color:#2a2a2a;text-align:justify;text-align-last:center;">
+        وَإِذَا قِيلَ لَهُمُ اتَّبِعُوا مَا أَنزَلَ اللَّهُ قَالُوا بَلْ نَتَّبِعُ مَا أَلْفَيْنَا عَلَيْهِ آبَاءَنَا ۗ أَوَلَوْ كَانَ آبَاؤُهُمْ لَا يَعْقِلُونَ شَيْئًا وَلَا يَهْتَدُونَ ﴿١٧٠﴾
+        وَمَثَلُ الَّذِينَ كَفَرُوا كَمَثَلِ الَّذِي يَنْعِقُ بِمَا لَا يَسْمَعُ إِلَّا دُعَاءً وَنِدَاءً ۚ صُمٌّ بُكْمٌ عُمْيٌ فَهُمْ لَا يَعْقِلُونَ ﴿١٧١﴾
+        يَا أَيُّهَا الَّذِينَ آمَنُوا كُلُوا مِن طَيِّبَاتِ مَا رَزَقْنَاكُمْ وَاشْكُرُوا لِلَّهِ إِن كُنتُمْ إِيَّاهُ تَعْبُدُونَ ﴿١٧٢﴾
+        إِنَّمَا حَرَّمَ عَلَيْكُمُ الْمَيْتَةَ وَالدَّمَ وَلَحْمَ الْخِنزِيرِ وَمَا أُهِلَّ بِهِ لِغَيْرِ اللَّهِ ۖ فَمَنِ اضْطُرَّ غَيْرَ بَاغٍ وَلَا عَادٍ فَلَا إِثْمَ عَلَيْهِ ۚ إِنَّ اللَّهَ غَفُورٌ رَّحِيمٌ ﴿١٧٣﴾
+      </div>
+      <div style="text-align:center;margin-top:12px;">
+        <span style="color:#bba87a;font-size:10px;font-family:system-ui;">— Which surah is this from? —</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" data-choice="b" onclick="toggleSelect(this)">
+    <div class="mockup-header">B: Mushaf Page Image Style</div>
+    <div class="mockup-body" style="background:#f5f0e0;padding:16px;border:3px double #d4c8a0;">
+      <div style="text-align:center;margin-bottom:8px;">
+        <span style="display:inline-block;border:1px solid #c4b88a;border-radius:50%;width:28px;height:28px;line-height:28px;font-size:11px;color:#8a7a5a;font-family:system-ui;">٢٩٣</span>
+      </div>
+      <div style="background:#faf8f0;border:1px solid #e8dfc8;border-radius:4px;padding:16px 12px;position:relative;">
+        <!-- Decorative border simulation -->
+        <div style="position:absolute;top:4px;left:4px;right:4px;bottom:4px;border:1px solid #e8dfc8;border-radius:2px;pointer-events:none;"></div>
+        <div style="direction:rtl;font-family:serif;font-size:14px;line-height:2.4;color:#1a1a1a;text-align:justify;padding:8px;">
+          وَإِذَا قِيلَ لَهُمُ اتَّبِعُوا مَا أَنزَلَ اللَّهُ قَالُوا بَلْ نَتَّبِعُ مَا أَلْفَيْنَا عَلَيْهِ آبَاءَنَا ۗ أَوَلَوْ كَانَ آبَاؤُهُمْ لَا يَعْقِلُونَ شَيْئًا وَلَا يَهْتَدُونَ ﴿١٧٠﴾
+          وَمَثَلُ الَّذِينَ كَفَرُوا كَمَثَلِ الَّذِي يَنْعِقُ بِمَا لَا يَسْمَعُ إِلَّا دُعَاءً وَنِدَاءً ۚ صُمٌّ بُكْمٌ عُمْيٌ فَهُمْ لَا يَعْقِلُونَ ﴿١٧١﴾
+          يَا أَيُّهَا الَّذِينَ آمَنُوا كُلُوا مِن طَيِّبَاتِ مَا رَزَقْنَاكُمْ وَاشْكُرُوا لِلَّهِ إِن كُنتُمْ إِيَّاهُ تَعْبُدُونَ ﴿١٧٢﴾
+          إِنَّمَا حَرَّمَ عَلَيْكُمُ الْمَيْتَةَ وَالدَّمَ وَلَحْمَ الْخِنزِيرِ وَمَا أُهِلَّ بِهِ لِغَيْرِ اللَّهِ ۖ فَمَنِ اضْطُرَّ غَيْرَ بَاغٍ وَلَا عَادٍ فَلَا إِثْمَ عَلَيْهِ ۚ إِنَّ اللَّهَ غَفُورٌ رَّحِيمٌ ﴿١٧٣﴾
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:10px;">
+        <span style="color:#8a7a5a;font-size:10px;font-family:system-ui;">— Which surah is this from? —</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:16px;">
+  <p class="subtitle"><strong>A</strong> is clean and minimal — just the text with a page number label. <strong>B</strong> adds a mushaf-style frame with decorative borders and parchment tones for a more traditional feel. Both use the same fetched Arabic text from the API.</p>
+</div>
