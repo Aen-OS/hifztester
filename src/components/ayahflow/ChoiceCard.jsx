@@ -1,6 +1,12 @@
 "use client";
 
-export default function ChoiceCard({ verse, state, onClick }) {
+export default function ChoiceCard({
+  verse,
+  state,
+  onClick,
+  showTranslation = true,
+  showTransliteration = false,
+}) {
   const styles = {
     default:
       "border-gray-200 hover:border-gray-400 hover:bg-gray-50 cursor-pointer",
@@ -17,8 +23,14 @@ export default function ChoiceCard({ verse, state, onClick }) {
       <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed">
         {verse.textUthmani}
       </p>
-      <p className="mt-2 text-sm text-gray-500">{verse.translation}</p>
-      {/* <p className="mt-1 text-xs text-gray-400">{verse.verseKey}</p> */}
+      {showTransliteration && verse.transliteration && (
+        <p className="mt-1.5 text-xs italic text-gray-500">
+          {verse.transliteration}
+        </p>
+      )}
+      {showTranslation && verse.translation && (
+        <p className="mt-1.5 text-sm text-gray-500">{verse.translation}</p>
+      )}
     </button>
   );
 }

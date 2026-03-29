@@ -1,4 +1,9 @@
-export default function QuestionCard({ verse, direction }) {
+export default function QuestionCard({
+  verse,
+  direction,
+  showTranslation = true,
+  showTransliteration = false,
+}) {
   return (
     <div className="rounded-2xl border border-gray-200 p-6 text-center">
       <p className="text-sm font-medium text-gray-500">
@@ -10,8 +15,14 @@ export default function QuestionCard({ verse, direction }) {
         className="mt-4 font-arabic text-3xl leading-loose">
         {verse.textUthmani}
       </p>
-      <p className="mt-3 text-sm text-gray-500">{verse.translation}</p>
-      {/* <p className="mt-2 text-xs text-gray-400">{verse.verseKey}</p> */}
+      {showTransliteration && verse.transliteration && (
+        <p className="mt-3 text-sm italic text-gray-500">
+          {verse.transliteration}
+        </p>
+      )}
+      {showTranslation && verse.translation && (
+        <p className="mt-2 text-sm text-gray-400">{verse.translation}</p>
+      )}
     </div>
   );
 }
