@@ -7,6 +7,8 @@ import DifficultySelector from "@/components/ayahflow/DifficultySelector";
 import DirectionToggle from "@/components/ayahflow/DirectionToggle";
 import AnswerModeSelector from "@/components/ayahflow/AnswerModeSelector";
 import BackButton from "@/components/BackButton";
+import DisplayOptionsSelector from "@/components/ayahflow/DisplayOptionsSelector";
+import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 export default function AyahFlowSetup() {
   const router = useRouter();
@@ -14,6 +16,9 @@ export default function AyahFlowSetup() {
   const [difficulty, setDifficulty] = useState("easy");
   const [testPrevious, setTestPrevious] = useState(false);
   const [answerMode, setAnswerMode] = useState("choices");
+  const [translationEnabled, setTranslationEnabled] = useState(true);
+  const [translationId, setTranslationId] = useState(DEFAULT_TRANSLATION_ID);
+  const [transliterationEnabled, setTransliterationEnabled] = useState(false);
 
   function handleStart() {
     const params = new URLSearchParams({
@@ -22,6 +27,8 @@ export default function AyahFlowSetup() {
       difficulty,
       mode: answerMode,
       testPrevious: testPrevious.toString(),
+      translation: translationEnabled ? translationId : "off",
+      transliteration: transliterationEnabled ? "on" : "off",
     });
     router.push(`/ayahflow/play?${params.toString()}`);
   }
@@ -58,6 +65,20 @@ export default function AyahFlowSetup() {
 
         <section>
           <DirectionToggle enabled={testPrevious} onChange={setTestPrevious} />
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">
+            Display Options
+          </h2>
+          <DisplayOptionsSelector
+            translationEnabled={translationEnabled}
+            onTranslationEnabledChange={setTranslationEnabled}
+            translationId={translationId}
+            onTranslationIdChange={setTranslationId}
+            transliterationEnabled={transliterationEnabled}
+            onTransliterationEnabledChange={setTransliterationEnabled}
+          />
         </section>
 
         <button
