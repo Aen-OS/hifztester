@@ -22,6 +22,8 @@ import AnswerModeToggle from "@/components/ayahflow/AnswerModeToggle";
 import TypingInput from "@/components/ayahflow/TypingInput";
 import DiffView from "@/components/ayahflow/DiffView";
 import { diffWords } from "@/lib/normalize-arabic";
+import DisplayOptionsToggle from "@/components/ayahflow/DisplayOptionsToggle";
+import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 const NEXT_DELAY_MS = 1200;
 const TYPING_WRONG_DELAY_MS = 3000;
@@ -36,6 +38,10 @@ function AyahFlowGameInner() {
   const difficulty = searchParams.get("difficulty") ?? "easy";
   const testPrevious = searchParams.get("testPrevious") === "true";
   const initialMode = searchParams.get("mode") ?? "choices";
+
+  const translationParam = searchParams.get("translation") ?? DEFAULT_TRANSLATION_ID;
+  const transliterationParam = searchParams.get("transliteration") === "on";
+  const translationId = translationParam === "off" ? DEFAULT_TRANSLATION_ID : translationParam;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,6 +61,8 @@ function AyahFlowGameInner() {
   const [fiftyFiftyUsedThisRound, setFiftyFiftyUsedThisRound] = useState(false);
   const [answerMode, setAnswerMode] = useState(initialMode);
   const [typingDiff, setTypingDiff] = useState(null);
+  const [showTranslation, setShowTranslation] = useState(translationParam !== "off");
+  const [showTransliteration, setShowTransliteration] = useState(transliterationParam);
 
   const surahCacheRef = useRef({});
   const verseMapRef = useRef(new Map());
@@ -68,7 +76,7 @@ function AyahFlowGameInner() {
     async function load() {
       try {
         setLoading(true);
-        const result = await fetchVersesForScope(scopeType, scopeValues);
+        const result = await fetchVersesForScope(scopeType, scopeValues, translationId);
         const map = buildVerseMap(result.verses);
         setVerses(result.verses);
         setBoundaryKeys(result.boundaryKeys);
@@ -92,7 +100,7 @@ function AyahFlowGameInner() {
     if (surahCacheRef.current[chapterId])
       return surahCacheRef.current[chapterId];
 
-    const fetched = await fetchSurahForDistractors(chapterId);
+    const fetched = await fetchSurahForDistractors(chapterId, translationId);
     surahCacheRef.current[chapterId] = fetched;
 
     const newMap = new Map(verseMapRef.current);
@@ -292,14 +300,27 @@ function AyahFlowGameInner() {
       <BackButton />
       <div className="mt-4 mb-6 flex items-center justify-between">
         <ScoreCounter correct={score.correct} total={score.total} />
-        <button
-          onClick={handleEnd}
-          className="rounded-lg border border-gray-200 px-4 py-1.5 text-sm hover:bg-gray-50">
-          End
-        </button>
+        <div className="flex items-center gap-2">
+          <DisplayOptionsToggle
+            translationEnabled={showTranslation}
+            onTranslationToggle={() => setShowTranslation((prev) => !prev)}
+            transliterationEnabled={showTransliteration}
+            onTransliterationToggle={() => setShowTransliteration((prev) => !prev)}
+          />
+          <button
+            onClick={handleEnd}
+            className="rounded-lg border border-gray-200 px-4 py-1.5 text-sm hover:bg-gray-50">
+            End
+          </button>
+        </div>
       </div>
 
-      <QuestionCard verse={question.prompt} direction={question.direction} />
+      <QuestionCard
+        verse={question.prompt}
+        direction={question.direction}
+        showTranslation={showTranslation}
+        showTransliteration={showTransliteration}
+      />
 
       <div className="mt-4">
         <HintBar
@@ -326,6 +347,8 @@ function AyahFlowGameInner() {
             selectedKey={selectedKey}
             onSelect={handleSelect}
             eliminatedKeys={eliminatedKeys}
+            showTranslation={showTranslation}
+            showTransliteration={showTransliteration}
           />
         ) : typingDiff ? (
           <DiffView diff={typingDiff} />

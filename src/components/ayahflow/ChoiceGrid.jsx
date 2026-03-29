@@ -2,7 +2,7 @@
 
 import ChoiceCard from "./ChoiceCard";
 
-export default function ChoiceGrid({ choices, correctKey, selectedKey, onSelect, eliminatedKeys = [] }) {
+export default function ChoiceGrid({ choices, correctKey, selectedKey, onSelect, eliminatedKeys = [], showTranslation = true, showTransliteration = false }) {
   function getState(choice) {
     if (!selectedKey) return "default";
     if (choice.verseKey === selectedKey && choice.verseKey === correctKey) return "correct";
@@ -23,6 +23,8 @@ export default function ChoiceGrid({ choices, correctKey, selectedKey, onSelect,
           verse={choice}
           state={getState(choice)}
           onClick={() => onSelect(choice.verseKey)}
+          showTranslation={showTranslation}
+          showTransliteration={showTransliteration}
         />
       ))}
     </div>
