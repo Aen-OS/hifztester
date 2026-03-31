@@ -2,7 +2,10 @@
 
 import { SURAH_NAMES } from "@/lib/quran-data";
 
-export default function SurahChoiceGrid({ choices, correctId, selectedId, onSelect }) {
+export default function SurahChoiceGrid({ choices, correctId, selectedId, onSelect, eliminatedIds = [] }) {
+  const eliminatedSet = new Set(eliminatedIds);
+  const visibleChoices = choices.filter((id) => !eliminatedSet.has(id));
+
   function getState(id) {
     if (selectedId === null) return "default";
     if (id === selectedId && id === correctId) return "correct";
@@ -20,7 +23,7 @@ export default function SurahChoiceGrid({ choices, correctId, selectedId, onSele
 
   return (
     <div className="grid gap-3 sm:grid-cols-2">
-      {choices.map((id) => (
+      {visibleChoices.map((id) => (
         <button
           key={id}
           onClick={() => onSelect(id)}

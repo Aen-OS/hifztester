@@ -33,6 +33,7 @@ export async function fetchChapterInfo(chapterId) {
     revelationOrder: chapter.revelationOrder,
     pages: chapter.pages,
     summary: info.shortText || info.text || "",
+    fullSummary: info.text || info.shortText || "",
   };
 }
 

@@ -125,7 +125,21 @@ export function redactSurahName(text, surahId) {
   return text;
 }
 
+function normalize(str) {
+  return str.toLowerCase().replace(/[-'\s]/g, "");
+}
+
+function stripPrefix(name) {
+  const dashIdx = name.indexOf("-");
+  return dashIdx !== -1 ? name.slice(dashIdx + 1) : name;
+}
+
 export function matchSurahName(typed, correctId) {
   const correctName = SURAH_NAMES[correctId] || "";
-  return typed.trim().toLowerCase() === correctName.toLowerCase();
+  const input = normalize(typed.trim());
+  if (!input) return false;
+  return (
+    input === normalize(correctName) ||
+    input === normalize(stripPrefix(correctName))
+  );
 }

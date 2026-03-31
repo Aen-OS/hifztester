@@ -113,34 +113,43 @@ function AyahFlowGameInner() {
     return fetched;
   }, []);
 
+  const buildQuestionForPrompt = useCallback(async (prompt, dir, allVerses) => {
+    const correctVerseKey =
+      dir === "next"
+        ? getNextVerseKey(prompt.verseKey)
+        : getPrevVerseKey(prompt.verseKey);
+    const correctVerse = verseMapRef.current.get(correctVerseKey);
+
+    let surahVerses = allVerses.filter(
+      (v) => v.chapterId === correctVerse.chapterId,
+    );
+    if (difficulty !== "easy") {
+      surahVerses = await getSurahVerses(correctVerse.chapterId);
+    }
+
+    return buildQuestion(
+      prompt,
+      dir,
+      difficulty,
+      verseMapRef.current,
+      allVerses,
+      surahVerses,
+    );
+  }, [difficulty, getSurahVerses]);
+
+  const lastBuildRef = useRef(null);
+
   useEffect(() => {
     if (promptQueue.length === 0 || loading) return;
+
+    const key = `${promptIndex}-${phase}`;
+    if (lastBuildRef.current === key) return;
+    lastBuildRef.current = key;
 
     async function build() {
       const prompt = promptQueue[promptIndex];
       const direction = phase === "previous" ? "previous" : "next";
-
-      const correctVerseKey =
-        direction === "next"
-          ? getNextVerseKey(prompt.verseKey)
-          : getPrevVerseKey(prompt.verseKey);
-      const correctVerse = verseMapRef.current.get(correctVerseKey);
-
-      let surahVerses = verses.filter(
-        (v) => v.chapterId === correctVerse.chapterId,
-      );
-      if (difficulty !== "easy") {
-        surahVerses = await getSurahVerses(correctVerse.chapterId);
-      }
-
-      const q = buildQuestion(
-        prompt,
-        direction,
-        difficulty,
-        verseMapRef.current,
-        verses,
-        surahVerses,
-      );
+      const q = await buildQuestionForPrompt(prompt, direction, verses);
       setQuestion(q);
       setSurahRevealed(false);
       setEliminatedKeys([]);

@@ -25,6 +25,7 @@ import AyahClue from "@/components/surahsense/AyahClue";
 import SummaryClue from "@/components/surahsense/SummaryClue";
 import SurahChoiceGrid from "@/components/surahsense/SurahChoiceGrid";
 import SurahTypingInput from "@/components/surahsense/SurahTypingInput";
+import SurahSenseHintBar from "@/components/surahsense/SurahSenseHintBar";
 import AnswerModeToggle from "@/components/ayahflow/AnswerModeToggle";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
 import BackButton from "@/components/BackButton";
@@ -59,6 +60,12 @@ function SurahSenseGameInner() {
   const [answerMode, setAnswerMode] = useState(initialAnswerMode);
   const [typingResult, setTypingResult] = useState(null);
   const [currentMode, setCurrentMode] = useState(null);
+  const [revelationPlaceRevealed, setRevelationPlaceRevealed] = useState(false);
+  const [verseCountRevealed, setVerseCountRevealed] = useState(false);
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
+  const [fiftyFiftyRemaining, setFiftyFiftyRemaining] = useState(3);
+  const [fiftyFiftyUsedThisRound, setFiftyFiftyUsedThisRound] = useState(false);
+  const [eliminatedIds, setEliminatedIds] = useState([]);
 
   const chapterInfoCacheRef = useRef({});
 
@@ -117,6 +124,11 @@ function SurahSenseGameInner() {
       setCorrectSurahId(surahId);
       setSelectedId(null);
       setTypingResult(null);
+      setRevelationPlaceRevealed(false);
+      setVerseCountRevealed(false);
+      setSummaryExpanded(false);
+      setFiftyFiftyUsedThisRound(false);
+      setEliminatedIds([]);
 
       const correctChapter = allChapters.find((ch) => ch.id === surahId);
       if (!correctChapter) return;
@@ -163,8 +175,7 @@ function SurahSenseGameInner() {
           setClue({
             type: "summary",
             summary: redactSurahName(info.summary, surahId),
-            revelationPlace: info.revelationPlace,
-            versesCount: info.versesCount,
+            fullSummary: redactSurahName(info.fullSummary, surahId),
           });
           break;
         }
@@ -216,6 +227,16 @@ function SurahSenseGameInner() {
     }, isCorrect ? CORRECT_DELAY_MS : WRONG_DELAY_MS);
   }
 
+  function handleFiftyFifty() {
+    if (fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedId !== null) return;
+    const incorrect = choices.filter((id) => id !== correctSurahId && !eliminatedIds.includes(id));
+    const shuffled = [...incorrect].sort(() => Math.random() - 0.5);
+    const toEliminate = shuffled.slice(0, 2);
+    setEliminatedIds((prev) => [...prev, ...toEliminate]);
+    setFiftyFiftyRemaining((prev) => prev - 1);
+    setFiftyFiftyUsedThisRound(true);
+  }
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -259,6 +280,7 @@ function SurahSenseGameInner() {
               onClick={() => {
                 setShowResults(false);
                 setScore({ correct: 0, total: 0 });
+                setFiftyFiftyRemaining(3);
                 const newQueue = createSurahPromptQueue(scopeSurahIds);
                 setPromptQueue(newQueue);
                 setPromptIndex(0);
@@ -316,11 +338,35 @@ function SurahSenseGameInner() {
         {clue.type === "summary" && (
           <SummaryClue
             summary={clue.summary}
-            revelationPlace={clue.revelationPlace}
-            versesCount={clue.versesCount}
+            fullSummary={clue.fullSummary}
+            expanded={summaryExpanded}
           />
         )}
       </div>
+
+      {/* Hint bar */}
+      {(() => {
+        const ch = allChapters.find((c) => c.id === correctSurahId);
+        return ch ? (
+          <div className="mb-4">
+            <SurahSenseHintBar
+              revelationPlace={ch.revelationPlace}
+              revelationPlaceRevealed={revelationPlaceRevealed}
+              onRevealRevelationPlace={() => setRevelationPlaceRevealed(true)}
+              versesCount={ch.versesCount}
+              verseCountRevealed={verseCountRevealed}
+              onRevealVerseCount={() => setVerseCountRevealed(true)}
+              showExpandSummary={clue?.type === "summary"}
+              summaryExpanded={summaryExpanded}
+              onExpandSummary={() => setSummaryExpanded(true)}
+              fiftyFiftyRemaining={fiftyFiftyRemaining}
+              fiftyFiftyDisabled={fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedId !== null}
+              fiftyFiftyHidden={answerMode === "type"}
+              onFiftyFifty={handleFiftyFifty}
+            />
+          </div>
+        ) : null;
+      })()}
 
       {/* Answer mode toggle */}
       <div className="mb-4">
@@ -334,6 +380,7 @@ function SurahSenseGameInner() {
           correctId={correctSurahId}
           selectedId={selectedId}
           onSelect={handleSelect}
+          eliminatedIds={eliminatedIds}
         />
       ) : typingResult ? (
         <div

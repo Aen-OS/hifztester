@@ -10,15 +10,19 @@ function buildFetchOpts(translationId) {
   return {
     fields: VERSE_FIELDS,
     translations: [translationId],
+    translationFields: { resourceName: true, languageName: true },
     words: true,
   };
 }
 
 function normalizeVerse(raw) {
-  const transliteration = (raw.words ?? [])
-    .filter((w) => w.charTypeName === "word")
+  const words = (raw.words ?? []).filter((w) => w.charTypeName === "word");
+  const transliteration = words
     .map((w) => w.transliteration?.text ?? "")
     .join(" ");
+  const translation =
+    raw.translations?.[0]?.text ??
+    words.map((w) => w.translation?.text ?? "").join(" ");
 
   return {
     id: raw.id,
@@ -26,7 +30,7 @@ function normalizeVerse(raw) {
     chapterId: Number(raw.chapterId ?? raw.verseKey.split(":")[0]),
     verseNumber: raw.verseNumber,
     textUthmani: raw.textUthmani,
-    translation: raw.translations?.[0]?.text ?? "",
+    translation,
     transliteration,
     juzNumber: raw.juzNumber,
     hizbNumber: raw.hizbNumber,
@@ -53,9 +57,52 @@ async function fetchAllPages(fetchFn, id, opts) {
   return all;
 }
 
+// Group sorted numbers into contiguous runs.
+// e.g., [1, 2, 3, 7, 8] → [[1, 2, 3], [7, 8]]
+function groupContiguous(sortedIds) {
+  const groups = [];
+  let current = [sortedIds[0]];
+  for (let i = 1; i < sortedIds.length; i++) {
+    if (sortedIds[i] === current[current.length - 1] + 1) {
+      current.push(sortedIds[i]);
+    } else {
+      groups.push(current);
+      current = [sortedIds[i]];
+    }
+  }
+  groups.push(current);
+  return groups;
+}
+
+async function fetchRangeAllPages(from, to, opts) {
+  const all = [];
+  let page = 1;
+  while (true) {
+    const batch = await client.verses.findByRange(from, to, {
+      ...opts,
+      perPage: MAX_PER_PAGE,
+      page,
+    });
+    all.push(...batch);
+    if (batch.length < MAX_PER_PAGE) break;
+    page++;
+  }
+  return all;
+}
+
 async function fetchByChapters(chapterIds, opts) {
+  const sorted = [...chapterIds].sort((a, b) => a - b);
+  const groups = groupContiguous(sorted);
   const results = await Promise.all(
-    chapterIds.map((id) => fetchAllPages(client.verses.findByChapter.bind(client.verses), id, opts)),
+    groups.map((group) => {
+      const first = group[0];
+      const last = group[group.length - 1];
+      return fetchRangeAllPages(
+        `${first}:1`,
+        `${last}:${SURAH_AYAH_COUNTS[last]}`,
+        opts,
+      );
+    }),
   );
   return results.flat();
 }
