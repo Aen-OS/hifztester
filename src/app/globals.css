@@ -1,15 +1,52 @@
 @import "tailwindcss";
 
-:root {
-}
-
 @theme inline {
   --font-arabic: var(--font-scheherazade);
   --font-display: var(--font-dm-serif-display);
   --font-body: var(--font-dm-serif-text);
   --font-rakkas: var(--font-rakkas);
+
+  --color-emerald-50: #eaf5ee;
+  --color-emerald-200: #a8d8bb;
+  --color-emerald-400: #2db87a;
+  --color-emerald-700: #0f5c3a;
+
+  --color-gold-50: #fef5e4;
+  --color-gold-300: #e8b84a;
+  --color-gold-500: #c8861a;
+
+  --color-ink: #1a2e24;
+  --color-muted: #7a9e8a;
+  --color-border: #d4e8dc;
+  --color-base: #f7f9f8;
+  --color-surface: #ffffff;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
 }
 
-body {
-  font-family: var(--font-body);
+@layer base {
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-base);
+    color: var(--color-ink);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-ink);
+  }
+
+  [lang="ar"],
+  .arabic {
+    font-family: var(--font-arabic);
+    direction: rtl;
+    line-height: 2.2;
+  }
 }
