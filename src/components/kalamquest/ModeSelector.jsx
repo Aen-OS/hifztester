@@ -16,14 +16,14 @@ export default function ModeSelector({ value, onChange }) {
           onClick={() => onChange(m.key)}
           className={`rounded-lg border p-3 text-left transition-colors ${
             value === m.key
-              ? "border-gray-900 bg-gray-900 text-white"
-              : "border-gray-200 hover:border-gray-400"
+              ? "border-emerald-700 bg-emerald-700 text-white"
+              : "border-border hover:border-emerald-200"
           }`}
         >
           <div className="text-sm font-medium">{m.label}</div>
           <div
             className={`mt-1 text-xs ${
-              value === m.key ? "text-gray-300" : "text-gray-500"
+              value === m.key ? "text-emerald-200" : "text-muted"
             }`}
           >
             {m.description}

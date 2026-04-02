@@ -16,29 +16,29 @@ export default function SurahSenseHintBar({
   onFiftyFifty,
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-gray-200 px-4 py-3">
+    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border px-4 py-3">
       <div className="flex flex-wrap items-center gap-2">
         {revelationPlaceRevealed ? (
-          <span className="rounded-lg bg-gray-50 px-3 py-1 text-sm font-medium text-gray-700">
+          <span className="rounded-lg bg-emerald-50 px-3 py-1 text-sm font-medium text-ink">
             {revelationPlace === "makkah" ? "Meccan" : "Medinan"}
           </span>
         ) : (
           <button
             onClick={onRevealRevelationPlace}
-            className="rounded-lg border border-gray-200 px-3 py-1 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+            className="rounded-lg border border-border px-3 py-1 text-sm text-muted hover:bg-emerald-50 hover:text-ink"
           >
             Revelation
           </button>
         )}
 
         {verseCountRevealed ? (
-          <span className="rounded-lg bg-gray-50 px-3 py-1 text-sm font-medium text-gray-700">
+          <span className="rounded-lg bg-emerald-50 px-3 py-1 text-sm font-medium text-ink">
             {versesCount} verses
           </span>
         ) : (
           <button
             onClick={onRevealVerseCount}
-            className="rounded-lg border border-gray-200 px-3 py-1 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+            className="rounded-lg border border-border px-3 py-1 text-sm text-muted hover:bg-emerald-50 hover:text-ink"
           >
             Verses
           </button>
@@ -47,14 +47,14 @@ export default function SurahSenseHintBar({
         {showExpandSummary && !summaryExpanded && (
           <button
             onClick={onExpandSummary}
-            className="rounded-lg border border-gray-200 px-3 py-1 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+            className="rounded-lg border border-border px-3 py-1 text-sm text-muted hover:bg-emerald-50 hover:text-ink"
           >
             More Detail
           </button>
         )}
 
         {showExpandSummary && summaryExpanded && (
-          <span className="rounded-lg bg-gray-50 px-3 py-1 text-sm font-medium text-gray-700">
+          <span className="rounded-lg bg-emerald-50 px-3 py-1 text-sm font-medium text-ink">
             Full summary shown
           </span>
         )}
@@ -66,8 +66,8 @@ export default function SurahSenseHintBar({
           disabled={fiftyFiftyDisabled}
           className={`ml-auto rounded-lg px-3 py-1 text-sm font-medium transition-colors ${
             fiftyFiftyDisabled
-              ? "cursor-not-allowed border border-gray-100 text-gray-300"
-              : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+              ? "cursor-not-allowed border border-emerald-50 text-emerald-200"
+              : "border border-border text-ink hover:bg-emerald-50"
           }`}
         >
           50/50 ({fiftyFiftyRemaining})
