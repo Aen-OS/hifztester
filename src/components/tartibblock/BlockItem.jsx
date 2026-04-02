@@ -15,11 +15,11 @@ export default function BlockItem({
   draggable = true,
 }) {
   const styles = {
-    default: "border-gray-200 bg-white hover:border-gray-400",
-    dragging: "border-gray-400 bg-gray-50 opacity-50",
-    selected: "border-blue-500 bg-blue-50 ring-2 ring-blue-200",
-    correct: "border-green-500 bg-green-50",
-    incorrect: "border-red-500 bg-red-50",
+    default: "border-border bg-surface hover:border-emerald-200",
+    dragging: "border-emerald-200 bg-emerald-50 opacity-50",
+    selected: "border-emerald-400 bg-emerald-50 ring-2 ring-emerald-200",
+    correct: "border-emerald-400 bg-emerald-50",
+    incorrect: "border-gold-300 bg-gold-50",
   };
 
   const icons = {
@@ -37,11 +37,11 @@ export default function BlockItem({
       onClick={onTap}
       className={`flex items-center gap-3 rounded-xl border p-4 transition-colors cursor-grab active:cursor-grabbing ${styles[state]}`}
     >
-      <span className="flex-shrink-0 text-gray-400 select-none">
+      <span className="flex-shrink-0 text-muted select-none">
         {state === "correct" ? (
-          <span className="text-green-600 font-bold">{icons.correct}</span>
+          <span className="text-emerald-400 font-bold">{icons.correct}</span>
         ) : state === "incorrect" ? (
-          <span className="text-red-600 font-bold">{icons.incorrect}</span>
+          <span className="text-gold-500 font-bold">{icons.incorrect}</span>
         ) : (
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
             <circle cx="5" cy="3" r="1.5" />
@@ -59,12 +59,12 @@ export default function BlockItem({
           {text}
         </p>
         {showTransliteration && transliteration && (
-          <p className="mt-1 text-xs italic text-gray-500 truncate">
+          <p className="mt-1 text-xs italic text-muted truncate">
             {transliteration}
           </p>
         )}
         {showTranslation && translation && (
-          <p className="mt-1 text-sm text-gray-500 truncate">
+          <p className="mt-1 text-sm text-muted truncate">
             {translation}
           </p>
         )}
