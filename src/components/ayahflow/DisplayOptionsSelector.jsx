@@ -14,14 +14,14 @@ export default function DisplayOptionsSelector({
   return (
     <div className="flex flex-wrap gap-2">
         {/* Translation control */}
-        <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-lg border border-gray-200 px-4 py-3">
+        <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-lg border border-border px-4 py-3">
           <div className="flex items-center gap-3">
             <button
               role="switch"
               aria-checked={translationEnabled}
               onClick={() => onTranslationEnabledChange(!translationEnabled)}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors ${
-                translationEnabled ? "bg-gray-900" : "bg-gray-200"
+                translationEnabled ? "bg-emerald-700" : "bg-emerald-200"
               }`}
             >
               <span
@@ -36,10 +36,10 @@ export default function DisplayOptionsSelector({
             value={translationId}
             onChange={(e) => onTranslationIdChange(e.target.value)}
             disabled={!translationEnabled}
-            className={`rounded-lg border border-gray-200 px-2 py-1 text-xs ${
+            className={`rounded-lg border border-border px-2 py-1 text-xs ${
               translationEnabled
-                ? "bg-white text-gray-700"
-                : "cursor-not-allowed bg-gray-100 text-gray-400 opacity-50"
+                ? "bg-white text-ink"
+                : "cursor-not-allowed bg-base text-muted opacity-50"
             }`}
           >
             {TRANSLATIONS.map((t) => (
@@ -51,13 +51,13 @@ export default function DisplayOptionsSelector({
         </div>
 
         {/* Transliteration control */}
-        <div className="flex items-center gap-3 rounded-lg border border-gray-200 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-lg border border-border px-4 py-3">
           <button
             role="switch"
             aria-checked={transliterationEnabled}
             onClick={() => onTransliterationEnabledChange(!transliterationEnabled)}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors ${
-              transliterationEnabled ? "bg-gray-900" : "bg-gray-200"
+              transliterationEnabled ? "bg-emerald-700" : "bg-emerald-200"
             }`}
           >
             <span

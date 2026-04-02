@@ -16,14 +16,14 @@ export default function DisplayOptionsToggle({
         onClick={onTranslationToggle}
         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs transition-colors ${
           translationEnabled
-            ? "border-gray-300 bg-gray-100 text-gray-700"
-            : "border-gray-200 text-gray-400"
+            ? "border-emerald-200 bg-emerald-50 text-ink"
+            : "border-border text-muted"
         }`}
       >
         <span>EN</span>
         <div
           className={`relative h-4 w-7 rounded-full transition-colors ${
-            translationEnabled ? "bg-gray-900" : "bg-gray-300"
+            translationEnabled ? "bg-emerald-700" : "bg-emerald-200"
           }`}
         >
           <span
@@ -40,14 +40,14 @@ export default function DisplayOptionsToggle({
         onClick={onTransliterationToggle}
         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs transition-colors ${
           transliterationEnabled
-            ? "border-gray-300 bg-gray-100 text-gray-700"
-            : "border-gray-200 text-gray-400"
+            ? "border-emerald-200 bg-emerald-50 text-ink"
+            : "border-border text-muted"
         }`}
       >
         <span>Aa</span>
         <div
           className={`relative h-4 w-7 rounded-full transition-colors ${
-            transliterationEnabled ? "bg-gray-900" : "bg-gray-300"
+            transliterationEnabled ? "bg-emerald-700" : "bg-emerald-200"
           }`}
         >
           <span

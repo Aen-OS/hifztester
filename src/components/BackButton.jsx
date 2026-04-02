@@ -4,7 +4,7 @@ export default function BackButton({ href = "/" }) {
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1.5 text-sm text-gray-500 transition-colors hover:text-gray-900">
+      className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-emerald-700">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"

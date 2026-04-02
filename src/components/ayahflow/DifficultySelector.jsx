@@ -27,14 +27,14 @@ export default function DifficultySelector({ value, onChange }) {
           onClick={() => onChange(d.key)}
           className={`flex-1 rounded-lg border p-3 text-left transition-colors ${
             value === d.key
-              ? "border-gray-900 bg-gray-900 text-white"
-              : "border-gray-200 hover:border-gray-400"
+              ? "border-emerald-700 bg-emerald-700 text-white"
+              : "border-border hover:border-emerald-200"
           }`}
         >
           <div className="text-sm font-medium">{d.label}</div>
           <div
             className={`mt-1 text-xs ${
-              value === d.key ? "text-gray-300" : "text-gray-500"
+              value === d.key ? "text-emerald-200" : "text-muted"
             }`}
           >
             {d.description}
