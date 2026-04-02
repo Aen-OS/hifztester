@@ -58,16 +58,16 @@ export default function AyahGapDisplay({ contextAyahs, label, useMushafLayout })
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 p-6 text-center">
+    <div className="rounded-lg border border-border p-6 text-center">
       {label && (
-        <p className="mb-4 text-sm font-medium text-gray-500">{label}</p>
+        <p className="mb-4 text-sm font-medium text-muted">{label}</p>
       )}
       <div dir="rtl" lang="ar" className="font-arabic space-y-2 text-xl leading-relaxed sm:text-2xl">
         {contextAyahs.map((item) =>
           item.gap ? (
             <div
               key={item.verseKey}
-              className="mx-auto rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-base text-gray-400"
+              className="mx-auto rounded-lg border-2 border-dashed border-emerald-200 bg-emerald-50 px-4 py-3 text-base text-muted"
             >
               ؟ ـــــــــــــ ؟
             </div>

@@ -315,8 +315,8 @@ function KalamQuestGameInner() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
-          <p className="mt-4 text-sm text-gray-500">Loading...</p>
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-emerald-200 border-t-emerald-700" />
+          <p className="mt-4 text-sm text-muted">Loading...</p>
         </div>
       </div>
     );
@@ -326,10 +326,10 @@ function KalamQuestGameInner() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-sm text-gold-500">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 rounded-lg bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-700"
+            className="mt-4 rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white hover:bg-emerald-400"
           >
             Retry
           </button>
@@ -345,10 +345,10 @@ function KalamQuestGameInner() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold">Session Complete</h2>
-          <p className="mt-4 text-4xl font-bold">
+          <p className="mt-4 text-4xl font-bold text-emerald-700">
             {score.correct}/{score.total}
           </p>
-          <p className="mt-1 text-gray-500">{pct}% accuracy</p>
+          <p className="mt-1 text-muted">{pct}% accuracy</p>
           <div className="mt-8 flex gap-3">
             <button
               onClick={() => {
@@ -359,13 +359,13 @@ function KalamQuestGameInner() {
                 setPromptQueue(newQueue);
                 setPromptIndex(0);
               }}
-              className="rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-700"
+              className="rounded-lg bg-emerald-700 px-6 py-2.5 text-sm font-medium text-white hover:bg-emerald-400"
             >
               Play Again
             </button>
             <button
               onClick={() => router.push("/kalamquest")}
-              className="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-medium hover:bg-gray-50"
+              className="rounded-lg border border-border px-6 py-2.5 text-sm font-medium hover:bg-emerald-50"
             >
               New Settings
             </button>
@@ -380,19 +380,19 @@ function KalamQuestGameInner() {
   if (!hasQuestion) return null;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-[480px] px-4 py-8">
       <BackButton />
       <div className="mt-4 mb-6 flex items-center justify-between">
         <ScoreCounter correct={score.correct} total={score.total} />
         <div className="flex items-center gap-3">
           {currentMode && (
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
               {currentMode}
             </span>
           )}
           <button
             onClick={() => setShowResults(true)}
-            className="rounded-lg border border-gray-200 px-4 py-1.5 text-sm hover:bg-gray-50"
+            className="rounded-lg border border-border px-4 py-1.5 text-sm hover:bg-emerald-50"
           >
             End
           </button>
@@ -469,11 +469,11 @@ function KalamQuestGameInner() {
           ) : typingDiff ? (
             <DiffView diff={typingDiff} />
           ) : selectedAyahKey && selectedAyahKey !== "__wrong__" ? (
-            <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
-              <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed text-green-700">
+            <div className="rounded-xl border border-emerald-400 bg-emerald-50 p-4 text-center">
+              <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed text-emerald-400">
                 {gapVerse?.textUthmani}
               </p>
-              <p className="mt-2 text-sm text-green-600">Correct!</p>
+              <p className="mt-2 text-sm text-emerald-400">Correct!</p>
             </div>
           ) : (
             <TypingInput
@@ -492,7 +492,7 @@ export default function KalamQuestGame() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-emerald-200 border-t-emerald-700" />
         </div>
       }
     >

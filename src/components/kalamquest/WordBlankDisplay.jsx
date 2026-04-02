@@ -44,8 +44,8 @@ export default function WordBlankDisplay({
   let revealIdx = 0;
 
   return (
-    <div className="rounded-2xl border border-gray-200 p-6 text-center">
-      <p className="mb-4 text-sm font-medium text-gray-500">
+    <div className="rounded-lg border border-border p-6 text-center">
+      <p className="mb-4 text-sm font-medium text-muted">
         Fill in the missing {blankCount === 1 ? "word" : "words"}
       </p>
       <div dir="rtl" lang="ar" className="font-arabic text-2xl leading-[2.6] sm:text-3xl">
@@ -67,8 +67,8 @@ export default function WordBlankDisplay({
                 key={i}
                 className={`mx-0.5 inline-block rounded px-2 ${
                   revealCorrect
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
+                    ? "bg-emerald-50 text-emerald-400"
+                    : "bg-gold-50 text-gold-500"
                 }`}
               >
                 {revealed}
@@ -80,7 +80,7 @@ export default function WordBlankDisplay({
             return (
               <span
                 key={i}
-                className="mx-0.5 inline-block border-b-2 border-dashed border-gray-400 px-4 text-gray-400"
+                className="mx-0.5 inline-block border-b-2 border-dashed border-emerald-200 px-4 text-muted"
               >
                 ـــ
               </span>
@@ -97,7 +97,7 @@ export default function WordBlankDisplay({
               onChange={(e) => handleInputChange(currentBlankIdx, e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={disabled}
-              className="font-arabic mx-1 inline-block w-28 border-b-2 border-dashed border-gray-400 bg-transparent px-2 text-center text-2xl focus:border-gray-900 focus:outline-none disabled:opacity-50 sm:w-36 sm:text-3xl"
+              className="font-arabic mx-1 inline-block w-28 border-b-2 border-dashed border-emerald-200 bg-transparent px-2 text-center text-2xl focus:border-emerald-700 focus:outline-none disabled:opacity-50 sm:w-36 sm:text-3xl"
               placeholder="..."
             />
           );
@@ -109,7 +109,7 @@ export default function WordBlankDisplay({
           <button
             onClick={handleSubmit}
             disabled={inputs.some((s) => !s.trim())}
-            className="rounded-lg bg-gray-900 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg bg-emerald-700 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Submit
           </button>

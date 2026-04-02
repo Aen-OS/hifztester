@@ -19,10 +19,10 @@ export default function WordChoiceGrid({
   }
 
   const styles = {
-    default: "border-gray-200 hover:border-gray-400 hover:bg-gray-50 cursor-pointer",
-    correct: "border-green-500 bg-green-50",
-    incorrect: "border-red-500 bg-red-50",
-    reveal: "border-green-500 bg-green-50 opacity-60",
+    default: "border-border hover:border-emerald-200 hover:bg-emerald-50 cursor-pointer",
+    correct: "border-emerald-400 bg-emerald-50",
+    incorrect: "border-gold-300 bg-gold-50",
+    reveal: "border-emerald-400 bg-emerald-50 opacity-60",
   };
 
   const visibleChoices = eliminatedAnswers.length > 0
