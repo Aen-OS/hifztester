@@ -20,6 +20,11 @@ export default function Home() {
           description="Identify the surah from a page, ayah, group of ayaat, or its summary."
           href="/surahsense"
         />
+        <GameCard
+          title="KalamQuest"
+          description="Fill in the missing words or ayahs to test your memorization."
+          href="/kalamquest"
+        />
       </div>
       {/* <div>
         <div className="mt-12 w-full rounded-xl border border-gray-200 p-4 text-left hover:border-gray-400 hover:bg-gray-50">
