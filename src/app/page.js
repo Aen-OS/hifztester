@@ -2,50 +2,39 @@ import GameCard from "@/components/GameCard";
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16">
+    <div className="mx-auto max-w-[480px] px-4 py-16">
       <div className="text-center">
-        <h1 className="text-7xl font-bold tracking-tight font-rakkas">إتقان</h1>
-        <p className="mt-2 text-lg text-gray-500 font-body">
+        <h1 className="text-7xl tracking-tight font-rakkas text-emerald-700">إتقان</h1>
+        <p className="mt-2 text-lg text-muted font-body">
           Quran memorization tools
         </p>
       </div>
-      <div className="mt-12 grid gap-4">
-        <GameCard
-          title="AyahFlow"
-          description="Given an ayah, guess what comes next. Test your memorization with multiple choice."
-          href="/ayahflow"
-        />
-        <GameCard
-          title="SurahSense"
-          description="Identify the surah from a page, ayah, group of ayaat, or its summary."
-          href="/surahsense"
-        />
-        <GameCard
-          title="KalamQuest"
-          description="Fill in the missing words or ayahs to test your memorization."
-          href="/kalamquest"
-        />
-        <GameCard
-          title="TartibBlock"
-          description="Arrange scrambled words or ayahs into the correct order."
-          href="/tartibblock"
-        />
-      </div>
-      {/* <div>
-        <div className="mt-12 w-full rounded-xl border border-gray-200 p-4 text-left hover:border-gray-400 hover:bg-gray-50">
-          <h3 className="font-bold">Roadmap</h3>
-          <div className="">
-            <h4>Phase 1</h4>
-            <p></p>
-          </div>
-          <div>
-            <h4>Phase 2</h4>
-          </div>
-          <div>
-            <h4>Phase 3</h4>
-          </div>
+      <div className="mt-12 rounded-lg border border-border bg-surface p-4">
+        <div className="grid grid-cols-2 gap-3">
+          <GameCard
+            title="AyahFlow"
+            description="Given an ayah, guess what comes next."
+            href="/ayahflow"
+          />
+          <GameCard
+            title="SurahSense"
+            description="Identify the surah from a clue."
+            href="/surahsense"
+          />
+          <GameCard
+            title="KalamQuest"
+            description="Fill in the missing words or ayahs."
+            href="/kalamquest"
+            hoverColor="gold"
+          />
+          <GameCard
+            title="TartibBlock"
+            description="Arrange scrambled blocks in order."
+            href="/tartibblock"
+            hoverColor="gold"
+          />
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }
