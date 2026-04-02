@@ -25,6 +25,11 @@ export default function Home() {
           description="Fill in the missing words or ayahs to test your memorization."
           href="/kalamquest"
         />
+        <GameCard
+          title="TartibBlock"
+          description="Arrange scrambled words or ayahs into the correct order."
+          href="/tartibblock"
+        />
       </div>
       {/* <div>
         <div className="mt-12 w-full rounded-xl border border-gray-200 p-4 text-left hover:border-gray-400 hover:bg-gray-50">
