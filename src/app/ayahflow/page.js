@@ -34,30 +34,30 @@ export default function AyahFlowSetup() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12">
+    <div className="mx-auto max-w-[480px] px-4 py-12">
       <BackButton />
-      <h1 className="mt-4 text-3xl font-bold">AyahFlow</h1>
-      <p className="mt-1 text-gray-500">
+      <h1 className="mt-4 text-3xl font-bold text-emerald-700">AyahFlow</h1>
+      <p className="mt-1 text-muted">
         Guess the next ayah from multiple choices
       </p>
 
       <div className="mt-8 space-y-8">
         <section>
-          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">
+          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-muted">
             Scope
           </h2>
           <ScopeSelector value={scope} onChange={setScope} />
         </section>
 
         <section>
-          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">
+          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-muted">
             Difficulty
           </h2>
           <DifficultySelector value={difficulty} onChange={setDifficulty} />
         </section>
 
         <section>
-          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">
+          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-muted">
             Answer Mode
           </h2>
           <AnswerModeSelector value={answerMode} onChange={setAnswerMode} />
@@ -68,10 +68,10 @@ export default function AyahFlowSetup() {
         </section>
 
         <section>
-          <h2 className="text-sm font-medium uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
             Display Options
           </h2>
-          <p className="mb-3 mt-1 text-xs text-gray-400">
+          <p className="mb-3 mt-1 text-xs text-muted">
             Choose what to show alongside the Arabic text
           </p>
           <DisplayOptionsSelector
@@ -87,7 +87,7 @@ export default function AyahFlowSetup() {
         <button
           onClick={handleStart}
           disabled={scope.values.length === 0}
-          className="w-full rounded-lg bg-gray-900 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+          className="w-full rounded-lg bg-emerald-700 py-3 text-sm font-medium text-white transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Start
         </button>
