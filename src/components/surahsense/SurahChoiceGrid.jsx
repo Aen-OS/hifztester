@@ -15,10 +15,10 @@ export default function SurahChoiceGrid({ choices, correctId, selectedId, onSele
   }
 
   const styles = {
-    default: "border-gray-200 hover:border-gray-400 hover:bg-gray-50 cursor-pointer",
-    correct: "border-green-500 bg-green-50",
-    incorrect: "border-red-500 bg-red-50",
-    reveal: "border-green-500 bg-green-50 opacity-60",
+    default: "border-border hover:border-emerald-200 hover:bg-emerald-50 cursor-pointer",
+    correct: "border-emerald-400 bg-emerald-50",
+    incorrect: "border-gold-300 bg-gold-50",
+    reveal: "border-emerald-400 bg-emerald-50 opacity-60",
   };
 
   return (
@@ -28,7 +28,7 @@ export default function SurahChoiceGrid({ choices, correctId, selectedId, onSele
           key={id}
           onClick={() => onSelect(id)}
           disabled={selectedId !== null}
-          className={`w-full rounded-xl border p-4 text-left transition-colors ${styles[getState(id)]}`}
+          className={`w-full rounded-lg border p-4 text-left transition-colors ${styles[getState(id)]}`}
         >
           <div className="text-base font-medium">
             {id}. {SURAH_NAMES[id]}
