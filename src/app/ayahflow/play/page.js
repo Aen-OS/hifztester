@@ -305,10 +305,10 @@ function AyahFlowGameInner() {
   if (!question) return null;
 
   return (
-    <div className="mx-auto max-w-[480px] px-4 py-8">
-      <BackButton />
-      <div className="mt-4 mb-6 flex items-center justify-between">
-        <ScoreCounter correct={score.correct} total={score.total} />
+    <div className="mx-auto flex h-dvh max-w-[480px] flex-col px-4">
+      {/* Top bar — fixed at top */}
+      <div className="flex items-center justify-between py-3">
+        <BackButton />
         <div className="flex items-center gap-2">
           <DisplayOptionsToggle
             translationEnabled={showTranslation}
@@ -324,53 +324,60 @@ function AyahFlowGameInner() {
         </div>
       </div>
 
-      <QuestionCard
-        verse={question.prompt}
-        direction={question.direction}
-        showTranslation={showTranslation}
-        showTransliteration={showTransliteration}
-      />
-
-      <div className="mt-4">
-        <HintBar
-          ayahNumber={question.prompt.verseNumber}
-          chapterId={question.prompt.chapterId}
-          surahRevealed={surahRevealed}
-          onToggleSurah={() => setSurahRevealed(true)}
-          fiftyFiftyRemaining={fiftyFiftyRemaining}
-          fiftyFiftyDisabled={fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedKey !== null}
-          fiftyFiftyHidden={answerMode === "type"}
-          onFiftyFifty={handleFiftyFifty}
-        />
-      </div>
-
-      <div className="mt-4">
-        <AnswerModeToggle value={answerMode} onChange={setAnswerMode} />
-      </div>
-
-      <div className="mt-4">
-        {answerMode === "choices" ? (
-          <ChoiceGrid
-            choices={question.choices}
-            correctKey={question.correctAnswer.verseKey}
-            selectedKey={selectedKey}
-            onSelect={handleSelect}
-            eliminatedKeys={eliminatedKeys}
-            showTranslation={showTranslation}
-            showTransliteration={showTransliteration}
-          />
-        ) : typingDiff ? (
-          <DiffView diff={typingDiff} />
-        ) : selectedKey ? (
-          <div className="rounded-xl border border-emerald-400 bg-emerald-50 p-4 text-center">
-            <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed text-emerald-700">
-              {question.correctAnswer.textUthmani}
-            </p>
-            <p className="mt-2 text-sm text-emerald-400">Correct!</p>
+      {/* Question zone — fills middle, scrolls if needed, content centered */}
+      <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto py-4">
+        <div className="w-full">
+          <ScoreCounter correct={score.correct} total={score.total} />
+          <div className="mt-3">
+            <QuestionCard
+              verse={question.prompt}
+              direction={question.direction}
+              showTranslation={showTranslation}
+              showTransliteration={showTransliteration}
+            />
           </div>
-        ) : (
-          <TypingInput onSubmit={handleTypedSubmit} disabled={selectedKey !== null} />
-        )}
+          <div className="mt-3">
+            <HintBar
+              ayahNumber={question.prompt.verseNumber}
+              chapterId={question.prompt.chapterId}
+              surahRevealed={surahRevealed}
+              onToggleSurah={() => setSurahRevealed(true)}
+              fiftyFiftyRemaining={fiftyFiftyRemaining}
+              fiftyFiftyDisabled={fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedKey !== null}
+              fiftyFiftyHidden={answerMode === "type"}
+              onFiftyFifty={handleFiftyFifty}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Answer zone — pinned to bottom */}
+      <div className="border-t border-border bg-surface py-3">
+        <AnswerModeToggle value={answerMode} onChange={setAnswerMode} />
+        <div className="mt-3">
+          {answerMode === "choices" ? (
+            <ChoiceGrid
+              choices={question.choices}
+              correctKey={question.correctAnswer.verseKey}
+              selectedKey={selectedKey}
+              onSelect={handleSelect}
+              eliminatedKeys={eliminatedKeys}
+              showTranslation={showTranslation}
+              showTransliteration={showTransliteration}
+            />
+          ) : typingDiff ? (
+            <DiffView diff={typingDiff} />
+          ) : selectedKey ? (
+            <div className="rounded-xl border border-emerald-400 bg-emerald-50 p-4 text-center">
+              <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed text-emerald-700">
+                {question.correctAnswer.textUthmani}
+              </p>
+              <p className="mt-2 text-sm text-emerald-400">Correct!</p>
+            </div>
+          ) : (
+            <TypingInput onSubmit={handleTypedSubmit} disabled={selectedKey !== null} />
+          )}
+        </div>
       </div>
     </div>
   );
