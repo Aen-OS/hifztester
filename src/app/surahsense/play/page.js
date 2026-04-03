@@ -27,8 +27,10 @@ import SurahChoiceGrid from "@/components/surahsense/SurahChoiceGrid";
 import SurahTypingInput from "@/components/surahsense/SurahTypingInput";
 import SurahSenseHintBar from "@/components/surahsense/SurahSenseHintBar";
 import AnswerModeToggle from "@/components/ayahflow/AnswerModeToggle";
+import DisplayOptionsToggle from "@/components/ayahflow/DisplayOptionsToggle";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
 import BackButton from "@/components/BackButton";
+import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 const CORRECT_DELAY_MS = 1200;
 const WRONG_DELAY_MS = 2000;
@@ -43,6 +45,11 @@ function SurahSenseGameInner() {
   const gameMode = searchParams.get("gameMode") ?? "page";
   const difficulty = searchParams.get("difficulty") ?? "easy";
   const initialAnswerMode = searchParams.get("answerMode") ?? "choices";
+  const translationParam = searchParams.get("translation") ?? DEFAULT_TRANSLATION_ID;
+  const transliterationParam = searchParams.get("transliteration") === "on";
+
+  const [showTranslation, setShowTranslation] = useState(translationParam !== "off");
+  const [showTransliteration, setShowTransliteration] = useState(transliterationParam);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -304,10 +311,10 @@ function SurahSenseGameInner() {
   if (!clue) return null;
 
   return (
-    <div className="mx-auto max-w-[480px] px-4 py-8">
-      <BackButton />
-      <div className="mt-4 mb-6 flex items-center justify-between">
-        <ScoreCounter correct={score.correct} total={score.total} />
+    <div className="mx-auto flex h-dvh max-w-[480px] flex-col px-4">
+      {/* Top bar */}
+      <div className="flex items-center justify-between py-3">
+        <BackButton />
         <div className="flex items-center gap-3">
           {currentMode && (
             <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
@@ -323,90 +330,106 @@ function SurahSenseGameInner() {
         </div>
       </div>
 
-      <div className="mb-4 text-center text-sm font-medium text-muted">
-        Which surah is this?
-      </div>
-
-      {/* Clue area */}
-      <div className="mb-6">
-        {clue.type === "page" && (
-          <MushafPage verses={clue.verses} pageNumber={clue.pageNumber} />
-        )}
-        {(clue.type === "ayah" || clue.type === "ayaat") && (
-          <AyahClue verses={clue.verses} />
-        )}
-        {clue.type === "summary" && (
-          <SummaryClue
-            summary={clue.summary}
-            fullSummary={clue.fullSummary}
-            expanded={summaryExpanded}
-          />
-        )}
-      </div>
-
-      {/* Hint bar */}
-      {(() => {
-        const ch = allChapters.find((c) => c.id === correctSurahId);
-        return ch ? (
-          <div className="mb-4">
-            <SurahSenseHintBar
-              revelationPlace={ch.revelationPlace}
-              revelationPlaceRevealed={revelationPlaceRevealed}
-              onRevealRevelationPlace={() => setRevelationPlaceRevealed(true)}
-              versesCount={ch.versesCount}
-              verseCountRevealed={verseCountRevealed}
-              onRevealVerseCount={() => setVerseCountRevealed(true)}
-              showExpandSummary={clue?.type === "summary"}
-              summaryExpanded={summaryExpanded}
-              onExpandSummary={() => setSummaryExpanded(true)}
-              fiftyFiftyRemaining={fiftyFiftyRemaining}
-              fiftyFiftyDisabled={fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedId !== null}
-              fiftyFiftyHidden={answerMode === "type"}
-              onFiftyFifty={handleFiftyFifty}
-            />
+      {/* Question zone — fills middle, scrolls if needed */}
+      <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto py-4">
+        <div className="w-full">
+          <ScoreCounter correct={score.correct} total={score.total} />
+          <div className="mt-2 text-center text-sm font-medium text-muted">
+            Which surah is this?
           </div>
-        ) : null;
-      })()}
 
-      {/* Answer mode toggle */}
-      <div className="mb-4">
-        <AnswerModeToggle value={answerMode} onChange={setAnswerMode} />
+          {/* Clue area */}
+          <div className="mt-3">
+            {clue.type === "page" && (
+              <MushafPage verses={clue.verses} pageNumber={clue.pageNumber} />
+            )}
+            {(clue.type === "ayah" || clue.type === "ayaat") && (
+              <>
+                <AyahClue verses={clue.verses} showTranslation={showTranslation} showTransliteration={showTransliteration} />
+                <div className="mt-2 flex justify-end">
+                  <DisplayOptionsToggle
+                    translationEnabled={showTranslation}
+                    onTranslationToggle={() => setShowTranslation((prev) => !prev)}
+                    transliterationEnabled={showTransliteration}
+                    onTransliterationToggle={() => setShowTransliteration((prev) => !prev)}
+                  />
+                </div>
+              </>
+            )}
+            {clue.type === "summary" && (
+              <SummaryClue
+                summary={clue.summary}
+                fullSummary={clue.fullSummary}
+                expanded={summaryExpanded}
+              />
+            )}
+          </div>
+
+          {/* Hint bar */}
+          <div className="mt-3">
+            {(() => {
+              const ch = allChapters.find((c) => c.id === correctSurahId);
+              return ch ? (
+                <SurahSenseHintBar
+                  revelationPlace={ch.revelationPlace}
+                  revelationPlaceRevealed={revelationPlaceRevealed}
+                  onRevealRevelationPlace={() => setRevelationPlaceRevealed(true)}
+                  versesCount={ch.versesCount}
+                  verseCountRevealed={verseCountRevealed}
+                  onRevealVerseCount={() => setVerseCountRevealed(true)}
+                  showExpandSummary={clue?.type === "summary"}
+                  summaryExpanded={summaryExpanded}
+                  onExpandSummary={() => setSummaryExpanded(true)}
+                  fiftyFiftyRemaining={fiftyFiftyRemaining}
+                  fiftyFiftyDisabled={fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedId !== null}
+                  fiftyFiftyHidden={answerMode === "type"}
+                  onFiftyFifty={handleFiftyFifty}
+                />
+              ) : null;
+            })()}
+          </div>
+        </div>
       </div>
 
-      {/* Answer area */}
-      {answerMode === "choices" ? (
-        <SurahChoiceGrid
-          choices={choices}
-          correctId={correctSurahId}
-          selectedId={selectedId}
-          onSelect={handleSelect}
-          eliminatedIds={eliminatedIds}
-        />
-      ) : typingResult ? (
-        <div
-          className={`rounded-lg border p-4 text-center ${
-            typingResult === "correct"
-              ? "border-emerald-400 bg-emerald-50"
-              : "border-gold-300 bg-gold-50"
-          }`}
-        >
-          <p
-            className={`text-lg font-medium ${
-              typingResult === "correct" ? "text-emerald-400" : "text-gold-500"
-            }`}
-          >
-            {typingResult === "correct" ? "Correct!" : "Incorrect"}
-          </p>
-          <p className="mt-1 text-sm text-muted">
-            {correctSurahId}. {SURAH_NAMES[correctSurahId]}
-          </p>
+      {/* Answer zone — pinned to bottom */}
+      <div className="border-t border-border bg-surface py-3">
+        <AnswerModeToggle value={answerMode} onChange={setAnswerMode} />
+        <div className="mt-3">
+          {answerMode === "choices" ? (
+            <SurahChoiceGrid
+              choices={choices}
+              correctId={correctSurahId}
+              selectedId={selectedId}
+              onSelect={handleSelect}
+              eliminatedIds={eliminatedIds}
+            />
+          ) : typingResult ? (
+            <div
+              className={`rounded-lg border p-4 text-center ${
+                typingResult === "correct"
+                  ? "border-emerald-400 bg-emerald-50"
+                  : "border-gold-300 bg-gold-50"
+              }`}
+            >
+              <p
+                className={`text-lg font-medium ${
+                  typingResult === "correct" ? "text-emerald-400" : "text-gold-500"
+                }`}
+              >
+                {typingResult === "correct" ? "Correct!" : "Incorrect"}
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                {correctSurahId}. {SURAH_NAMES[correctSurahId]}
+              </p>
+            </div>
+          ) : (
+            <SurahTypingInput
+              onSubmit={handleTypedSubmit}
+              disabled={selectedId !== null}
+            />
+          )}
         </div>
-      ) : (
-        <SurahTypingInput
-          onSubmit={handleTypedSubmit}
-          disabled={selectedId !== null}
-        />
-      )}
+      </div>
     </div>
   );
 }
