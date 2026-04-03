@@ -25,13 +25,11 @@ export default function Home() {
             title="KalamQuest"
             description="Fill in the missing words or ayahs."
             href="/kalamquest"
-            hoverColor="gold"
           />
           <GameCard
-            title="TartibBlock"
+            title="TartibLock"
             description="Arrange scrambled blocks in order."
-            href="/tartibblock"
-            hoverColor="gold"
+            href="/tartiblock"
           />
         </div>
       </div>

@@ -311,7 +311,7 @@ function SurahSenseGameInner() {
   if (!clue) return null;
 
   return (
-    <div className="mx-auto flex h-dvh max-w-[480px] flex-col px-4">
+    <div className={`mx-auto flex h-dvh flex-col px-4 ${currentMode === "page" ? "max-w-3xl" : "max-w-[480px]"}`}>
       {/* Top bar */}
       <div className="flex items-center justify-between py-3">
         <BackButton />

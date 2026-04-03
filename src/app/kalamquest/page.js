@@ -5,10 +5,8 @@ import { useRouter } from "next/navigation";
 import ScopeSelector from "@/components/ayahflow/ScopeSelector";
 import DifficultySelector from "@/components/ayahflow/DifficultySelector";
 import AnswerModeSelector from "@/components/ayahflow/AnswerModeSelector";
-import DisplayOptionsSelector from "@/components/ayahflow/DisplayOptionsSelector";
 import ModeSelector from "@/components/kalamquest/ModeSelector";
 import BackButton from "@/components/BackButton";
-import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 export default function KalamQuestSetup() {
   const router = useRouter();
@@ -16,9 +14,6 @@ export default function KalamQuestSetup() {
   const [gameMode, setGameMode] = useState("ayah");
   const [difficulty, setDifficulty] = useState("easy");
   const [answerMode, setAnswerMode] = useState("choices");
-  const [translationEnabled, setTranslationEnabled] = useState(true);
-  const [translationId, setTranslationId] = useState(DEFAULT_TRANSLATION_ID);
-  const [transliterationEnabled, setTransliterationEnabled] = useState(false);
 
   function handleStart() {
     const params = new URLSearchParams({
@@ -27,8 +22,6 @@ export default function KalamQuestSetup() {
       gameMode,
       difficulty,
       answerMode,
-      translation: translationEnabled ? translationId : "off",
-      transliteration: transliterationEnabled ? "on" : "off",
     });
     router.push(`/kalamquest/play?${params.toString()}`);
   }
@@ -68,23 +61,6 @@ export default function KalamQuestSetup() {
             Answer Mode
           </h2>
           <AnswerModeSelector value={answerMode} onChange={setAnswerMode} />
-        </section>
-
-        <section>
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
-            Display Options
-          </h2>
-          <p className="mb-3 mt-1 text-xs text-muted">
-            Choose what to show alongside the Arabic text
-          </p>
-          <DisplayOptionsSelector
-            translationEnabled={translationEnabled}
-            onTranslationEnabledChange={setTranslationEnabled}
-            translationId={translationId}
-            onTranslationIdChange={setTranslationId}
-            transliterationEnabled={transliterationEnabled}
-            onTransliterationEnabledChange={setTransliterationEnabled}
-          />
         </section>
 
         <button

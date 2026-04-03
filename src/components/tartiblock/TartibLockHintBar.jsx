@@ -2,7 +2,7 @@
 
 import { SURAH_NAMES } from "@/lib/quran-data";
 
-export default function TartibBlockHintBar({
+export default function TartibLockHintBar({
   chapterId,
   pageNumber,
   difficulty,

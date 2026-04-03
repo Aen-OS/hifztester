@@ -14,7 +14,7 @@ export default function DisplayOptionsSelector({
   return (
     <div className="flex flex-wrap gap-2">
         {/* Translation control */}
-        <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-lg border border-border px-4 py-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 rounded-lg border border-border px-4 py-3">
           <div className="flex items-center gap-3">
             <button
               role="switch"
@@ -36,7 +36,7 @@ export default function DisplayOptionsSelector({
             value={translationId}
             onChange={(e) => onTranslationIdChange(e.target.value)}
             disabled={!translationEnabled}
-            className={`rounded-lg border border-border px-2 py-1 text-xs ${
+            className={`w-full truncate rounded-lg border border-border px-2 py-1 text-xs ${
               translationEnabled
                 ? "bg-white text-ink"
                 : "cursor-not-allowed bg-base text-muted opacity-50"

@@ -6,6 +6,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const Rakkasfont = Rakkas({
   variable: "--font-rakkas",
@@ -43,6 +44,7 @@ export default function RootLayout({ children }) {
       className={`${Rakkasfont.variable} ${DMSerifText.variable} ${DMSerifDisplay.variable} ${scheherazade.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
       <Analytics />
+      <SpeedInsights />
     </html>
   );
 }

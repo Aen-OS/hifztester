@@ -1,14 +1,14 @@
-// src/lib/tartibblock-engine.js
+// src/lib/tartiblock-engine.js
 import { shuffle } from "@/lib/game-engine";
 
 /**
- * Build a shuffled prompt queue for TartibBlock.
+ * Build a shuffled prompt queue for TartibLock.
  * - ayah mode: each verse is a prompt (user reorders word blocks)
  * - surah mode: each unique surah becomes a prompt (user reorders ayah blocks)
  * - page mode: each unique page becomes a prompt (user reorders ayah blocks)
  * - mixed: each verse is a prompt, with a random mode assigned per round
  */
-export function createTartibBlockQueue(verses, mode) {
+export function createTartibLockQueue(verses, mode) {
   if (mode === "surah") {
     const surahIds = [...new Set(verses.map((v) => v.chapterId))];
     return shuffle([...surahIds]).map((id) => ({ type: "surah", surahId: id }));

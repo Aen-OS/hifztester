@@ -2,7 +2,13 @@
 
 import { SURAH_NAMES } from "@/lib/quran-data";
 
-export default function SurahChoiceGrid({ choices, correctId, selectedId, onSelect, eliminatedIds = [] }) {
+export default function SurahChoiceGrid({
+  choices,
+  correctId,
+  selectedId,
+  onSelect,
+  eliminatedIds = [],
+}) {
   const eliminatedSet = new Set(eliminatedIds);
   const visibleChoices = choices.filter((id) => !eliminatedSet.has(id));
 
@@ -15,7 +21,8 @@ export default function SurahChoiceGrid({ choices, correctId, selectedId, onSele
   }
 
   const styles = {
-    default: "border-border hover:border-emerald-200 hover:bg-emerald-50 cursor-pointer",
+    default:
+      "border-border hover:border-emerald-200 hover:bg-emerald-50 cursor-pointer",
     correct: "border-emerald-400 bg-emerald-50",
     incorrect: "border-gold-300 bg-gold-50",
     reveal: "border-emerald-400 bg-emerald-50 opacity-60",
@@ -28,9 +35,8 @@ export default function SurahChoiceGrid({ choices, correctId, selectedId, onSele
           key={id}
           onClick={() => onSelect(id)}
           disabled={selectedId !== null}
-          className={`w-full rounded-lg border p-4 text-left transition-colors ${styles[getState(id)]}`}
-        >
-          <div className="text-base font-medium">
+          className={`w-full rounded-lg border p-4 text-left transition-colors ${styles[getState(id)]}`}>
+          <div className="font-medium">
             {id}. {SURAH_NAMES[id]}
           </div>
         </button>
