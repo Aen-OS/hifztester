@@ -25,7 +25,6 @@ import DiffView from "@/components/ayahflow/DiffView";
 import AnswerModeToggle from "@/components/ayahflow/AnswerModeToggle";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
 import BackButton from "@/components/BackButton";
-import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 const CORRECT_DELAY_MS = 1200;
 const WRONG_DELAY_MS = 2500;
@@ -40,9 +39,6 @@ function KalamQuestGameInner() {
   const gameMode = searchParams.get("gameMode") ?? "ayah";
   const difficulty = searchParams.get("difficulty") ?? "easy";
   const initialAnswerMode = searchParams.get("answerMode") ?? "choices";
-  const translationParam = searchParams.get("translation") ?? DEFAULT_TRANSLATION_ID;
-  const transliterationParam = searchParams.get("transliteration") === "on";
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [verses, setVerses] = useState([]);
@@ -88,7 +84,7 @@ function KalamQuestGameInner() {
     async function load() {
       try {
         setLoading(true);
-        const result = await fetchVersesForScope(scopeType, scopeValues, translationParam === "off" ? DEFAULT_TRANSLATION_ID : translationParam);
+        const result = await fetchVersesForScope(scopeType, scopeValues);
         setVerses(result.verses);
 
         const queue = createKalamQuestQueue(result.verses, gameMode);
@@ -380,10 +376,10 @@ function KalamQuestGameInner() {
   if (!hasQuestion) return null;
 
   return (
-    <div className="mx-auto max-w-[480px] px-4 py-8">
-      <BackButton />
-      <div className="mt-4 mb-6 flex items-center justify-between">
-        <ScoreCounter correct={score.correct} total={score.total} />
+    <div className="mx-auto flex h-dvh max-w-[480px] flex-col px-4">
+      {/* Top bar */}
+      <div className="flex items-center justify-between py-3">
+        <BackButton />
         <div className="flex items-center gap-3">
           {currentMode && (
             <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
@@ -399,89 +395,90 @@ function KalamQuestGameInner() {
         </div>
       </div>
 
-      {/* Question display */}
-      <div className="mb-4">
-        {isAyahMode ? (
-          <WordBlankDisplay
-            display={wordDisplay}
-            answerMode={answerMode}
-            onTypingSubmit={handleWordTypingSubmit}
-            disabled={selectedWordAnswer !== null}
-            revealWords={wordReveal}
-            revealCorrect={wordRevealCorrect}
-          />
-        ) : (
-          <AyahGapDisplay
-            contextAyahs={contextAyahs}
-            label={contextLabel}
-            useMushafLayout={useMushafLayout}
-          />
-        )}
-      </div>
-
-      {/* Hint bar */}
-      {currentChapterId && (
-        <div className="mb-4">
-          <KalamQuestHintBar
-            chapterId={currentChapterId}
-            surahRevealed={surahRevealed}
-            onRevealSurah={() => setSurahRevealed(true)}
-            fiftyFiftyRemaining={fiftyFiftyRemaining}
-            fiftyFiftyDisabled={
-              fiftyFiftyUsedThisRound ||
-              fiftyFiftyRemaining <= 0 ||
-              (isAyahMode ? selectedWordAnswer !== null : selectedAyahKey !== null)
-            }
-            fiftyFiftyHidden={answerMode === "type"}
-            onFiftyFifty={handleFiftyFifty}
-          />
+      {/* Question zone — fills middle, scrolls if needed */}
+      <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto py-4">
+        <div className="w-full">
+          <ScoreCounter correct={score.correct} total={score.total} />
+          <div className="mt-3">
+            {isAyahMode ? (
+              <WordBlankDisplay
+                display={wordDisplay}
+                answerMode={answerMode}
+                onTypingSubmit={handleWordTypingSubmit}
+                disabled={selectedWordAnswer !== null}
+                revealWords={wordReveal}
+                revealCorrect={wordRevealCorrect}
+              />
+            ) : (
+              <AyahGapDisplay
+                contextAyahs={contextAyahs}
+                label={contextLabel}
+                useMushafLayout={useMushafLayout}
+              />
+            )}
+          </div>
+          <div className="mt-3">
+            {currentChapterId && (
+              <KalamQuestHintBar
+                chapterId={currentChapterId}
+                surahRevealed={surahRevealed}
+                onRevealSurah={() => setSurahRevealed(true)}
+                fiftyFiftyRemaining={fiftyFiftyRemaining}
+                fiftyFiftyDisabled={
+                  fiftyFiftyUsedThisRound ||
+                  fiftyFiftyRemaining <= 0 ||
+                  (isAyahMode ? selectedWordAnswer !== null : selectedAyahKey !== null)
+                }
+                fiftyFiftyHidden={answerMode === "type"}
+                onFiftyFifty={handleFiftyFifty}
+              />
+            )}
+          </div>
         </div>
-      )}
-
-      {/* Answer mode toggle */}
-      <div className="mb-4">
-        <AnswerModeToggle value={answerMode} onChange={setAnswerMode} />
       </div>
 
-      {/* Answer area */}
-      <div>
-        {isAyahMode ? (
-          answerMode === "choices" ? (
-            <WordChoiceGrid
-              choices={wordChoices}
-              correctAnswer={blankedWords.join(" ")}
-              selectedAnswer={selectedWordAnswer}
-              onSelect={handleWordChoiceSelect}
-              eliminatedAnswers={eliminatedWordAnswers}
-            />
-          ) : null
-        ) : (
-          answerMode === "choices" ? (
-            <ChoiceGrid
-              choices={ayahChoices}
-              correctKey={gapVerse?.verseKey}
-              selectedKey={selectedAyahKey}
-              onSelect={handleAyahChoiceSelect}
-              eliminatedKeys={eliminatedAyahKeys}
-              showTranslation={translationParam !== "off"}
-              showTransliteration={transliterationParam}
-            />
-          ) : typingDiff ? (
-            <DiffView diff={typingDiff} />
-          ) : selectedAyahKey && selectedAyahKey !== "__wrong__" ? (
-            <div className="rounded-xl border border-emerald-400 bg-emerald-50 p-4 text-center">
-              <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed text-emerald-400">
-                {gapVerse?.textUthmani}
-              </p>
-              <p className="mt-2 text-sm text-emerald-400">Correct!</p>
-            </div>
+      {/* Answer zone — pinned to bottom */}
+      <div className="border-t border-border bg-surface py-3">
+        <AnswerModeToggle value={answerMode} onChange={setAnswerMode} />
+        <div className="mt-3">
+          {isAyahMode ? (
+            answerMode === "choices" ? (
+              <WordChoiceGrid
+                choices={wordChoices}
+                correctAnswer={blankedWords.join(" ")}
+                selectedAnswer={selectedWordAnswer}
+                onSelect={handleWordChoiceSelect}
+                eliminatedAnswers={eliminatedWordAnswers}
+              />
+            ) : null
           ) : (
-            <TypingInput
-              onSubmit={handleAyahTypingSubmit}
-              disabled={selectedAyahKey !== null}
-            />
-          )
-        )}
+            answerMode === "choices" ? (
+              <ChoiceGrid
+                choices={ayahChoices}
+                correctKey={gapVerse?.verseKey}
+                selectedKey={selectedAyahKey}
+                onSelect={handleAyahChoiceSelect}
+                eliminatedKeys={eliminatedAyahKeys}
+                showTranslation={false}
+                showTransliteration={false}
+              />
+            ) : typingDiff ? (
+              <DiffView diff={typingDiff} />
+            ) : selectedAyahKey && selectedAyahKey !== "__wrong__" ? (
+              <div className="rounded-xl border border-emerald-400 bg-emerald-50 p-4 text-center">
+                <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed text-emerald-400">
+                  {gapVerse?.textUthmani}
+                </p>
+                <p className="mt-2 text-sm text-emerald-400">Correct!</p>
+              </div>
+            ) : (
+              <TypingInput
+                onSubmit={handleAyahTypingSubmit}
+                disabled={selectedAyahKey !== null}
+              />
+            )
+          )}
+        </div>
       </div>
     </div>
   );
