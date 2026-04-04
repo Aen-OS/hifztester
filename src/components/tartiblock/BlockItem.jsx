@@ -15,11 +15,11 @@ export default function BlockItem({
   draggable = true,
 }) {
   const styles = {
-    default: "border-border bg-surface hover:border-emerald-200",
-    dragging: "border-emerald-200 bg-emerald-50 opacity-50",
+    default: "border-[#e0e0d8] bg-surface hover:border-emerald-700/50",
+    dragging: "border-emerald-200 bg-emerald-50 opacity-95 scale-[1.02] shadow-[0_8px_24px_rgba(0,0,0,0.12)]",
     selected: "border-emerald-400 bg-emerald-50 ring-2 ring-emerald-200",
-    correct: "border-emerald-400 bg-emerald-50",
-    incorrect: "border-gold-300 bg-gold-50",
+    correct: "border-[1.5px] border-[#4caf82] bg-[#f0faf4]",
+    incorrect: "border-[1.5px] border-[#e8a87c] bg-[#fff8f0]",
   };
 
   const icons = {
@@ -35,27 +35,27 @@ export default function BlockItem({
       onDrop={onDrop}
       onDragEnd={onDragEnd}
       onClick={onTap}
-      className={`flex items-center gap-3 rounded-xl border p-4 transition-colors cursor-grab active:cursor-grabbing ${styles[state]}`}
+      className={`flex min-h-16 items-center gap-3 rounded-[10px] border px-5 py-4 transition-all duration-150 cursor-grab active:cursor-grabbing ${styles[state]}`}
     >
-      <span className="flex-shrink-0 text-muted select-none">
+      <span className="flex-shrink-0 select-none">
         {state === "correct" ? (
           <span className="text-emerald-400 font-bold">{icons.correct}</span>
         ) : state === "incorrect" ? (
           <span className="text-gold-500 font-bold">{icons.incorrect}</span>
         ) : (
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <circle cx="5" cy="3" r="1.5" />
-            <circle cx="11" cy="3" r="1.5" />
-            <circle cx="5" cy="8" r="1.5" />
-            <circle cx="11" cy="8" r="1.5" />
-            <circle cx="5" cy="13" r="1.5" />
-            <circle cx="11" cy="13" r="1.5" />
+          <svg width="16" height="16" viewBox="0 0 16 16" className="text-emerald-700/40">
+            <circle cx="5" cy="3" r="1.5" fill="currentColor" />
+            <circle cx="11" cy="3" r="1.5" fill="currentColor" />
+            <circle cx="5" cy="8" r="1.5" fill="currentColor" />
+            <circle cx="11" cy="8" r="1.5" fill="currentColor" />
+            <circle cx="5" cy="13" r="1.5" fill="currentColor" />
+            <circle cx="11" cy="13" r="1.5" fill="currentColor" />
           </svg>
         )}
       </span>
 
       <div className="flex-1 min-w-0">
-        <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed">
+        <p dir="rtl" lang="ar" className="font-arabic text-[22px] leading-relaxed">
           {text}
         </p>
         {showTransliteration && transliteration && (

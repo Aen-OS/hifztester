@@ -13,22 +13,22 @@ export default function HintBar({
   onFiftyFifty,
 }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
+    <div className="flex items-center justify-between rounded-[10px] border border-emerald-700/12 px-4 py-2.5">
       <div className="flex items-center gap-3">
-        <span className="text-sm font-medium text-ink">
+        <span className="text-[13px] font-medium text-ink">
           Ayah {ayahNumber}
         </span>
 
-        <span className="text-emerald-200">|</span>
+        <span className="text-border">|</span>
 
         {surahRevealed ? (
-          <span className="text-sm font-medium text-ink">
+          <span className="text-[13px] font-medium text-ink">
             Surah {chapterId} &mdash; {SURAH_NAMES[chapterId]}
           </span>
         ) : (
           <button
             onClick={onToggleSurah}
-            className="rounded-lg border border-border px-3 py-1 text-sm text-muted hover:bg-emerald-50 hover:text-ink"
+            className="text-[13px] text-muted transition-colors hover:text-emerald-700"
           >
             Reveal Surah
           </button>
@@ -39,10 +39,10 @@ export default function HintBar({
         <button
           onClick={onFiftyFifty}
           disabled={fiftyFiftyDisabled}
-          className={`rounded-lg px-3 py-1 text-sm font-medium transition-colors ${
+          className={`text-[13px] font-medium transition-colors ${
             fiftyFiftyDisabled
-              ? "cursor-not-allowed border border-emerald-50 text-emerald-200"
-              : "border border-border text-ink hover:bg-emerald-50"
+              ? "cursor-not-allowed text-emerald-200"
+              : "text-muted hover:text-emerald-700"
           }`}
         >
           50/50 ({fiftyFiftyRemaining})

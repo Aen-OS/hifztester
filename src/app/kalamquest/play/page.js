@@ -376,7 +376,7 @@ function KalamQuestGameInner() {
   if (!hasQuestion) return null;
 
   return (
-    <div className={`mx-auto flex h-dvh flex-col px-4 ${currentMode === "page" ? "max-w-3xl" : "max-w-[480px]"}`}>
+    <div className={`mx-auto flex h-dvh flex-col px-5 ${currentMode === "page" ? "max-w-3xl" : "max-w-[680px]"}`}>
       {/* Top bar */}
       <div className="flex items-center justify-between py-3">
         <BackButton />
@@ -388,7 +388,7 @@ function KalamQuestGameInner() {
           )}
           <button
             onClick={() => setShowResults(true)}
-            className="rounded-lg border border-border px-4 py-1.5 text-sm hover:bg-emerald-50"
+            className="rounded-lg border border-emerald-700 px-4 py-1.5 text-sm text-emerald-700 transition-colors hover:bg-emerald-50"
           >
             End
           </button>
@@ -397,9 +397,9 @@ function KalamQuestGameInner() {
 
       {/* Question zone — fills middle, scrolls if needed */}
       <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto py-4">
-        <div className="w-full">
+        <div className="w-full space-y-4">
           <ScoreCounter correct={score.correct} total={score.total} />
-          <div className="mt-3">
+          <div>
             {isAyahMode ? (
               <WordBlankDisplay
                 display={wordDisplay}
@@ -417,7 +417,7 @@ function KalamQuestGameInner() {
               />
             )}
           </div>
-          <div className="mt-3">
+          <div>
             {currentChapterId && (
               <KalamQuestHintBar
                 chapterId={currentChapterId}

@@ -246,7 +246,7 @@ function TartibLockGameInner() {
   if (blocks.length === 0) return null;
 
   return (
-    <div className={`mx-auto flex h-dvh flex-col px-4 ${currentMode === "page" ? "max-w-3xl" : "max-w-[480px]"}`}>
+    <div className={`mx-auto flex h-dvh flex-col px-5 ${currentMode === "page" ? "max-w-3xl" : "max-w-[680px]"}`}>
       {/* Top bar */}
       <div className="flex items-center justify-between py-3">
         <BackButton />
@@ -258,21 +258,21 @@ function TartibLockGameInner() {
           )}
           <button
             onClick={() => setShowResults(true)}
-            className="rounded-lg border border-border px-4 py-1.5 text-sm hover:bg-emerald-50"
+            className="rounded-lg border border-emerald-700 px-4 py-1.5 text-sm text-emerald-700 transition-colors hover:bg-emerald-50"
           >
             End
           </button>
         </div>
       </div>
 
-      {/* Question zone — round label + hint bar + score, centered */}
-      <div className="py-2">
+      {/* Question zone — round label + hint bar + score */}
+      <div className="space-y-3 py-2">
         <ScoreCounter correct={score.correct} total={score.total} />
-        <div className="mt-2 text-center text-sm font-medium text-muted">
+        <p className="text-center text-[13px] font-medium uppercase tracking-[0.08em] text-muted">
           {showingCorrect ? "Correct order:" : roundLabel}
-        </div>
+        </p>
         {currentChapterId && (
-          <div className="mt-2">
+          <div>
             <TartibLockHintBar
               chapterId={currentChapterId}
               pageNumber={currentPageNumber}
@@ -301,7 +301,7 @@ function TartibLockGameInner() {
         {!submitted && (
           <button
             onClick={handleSubmit}
-            className="w-full rounded-lg bg-emerald-700 py-3 text-sm font-medium text-white transition-colors hover:bg-emerald-400"
+            className="h-[52px] w-full rounded-xl bg-emerald-700 text-base font-semibold text-white transition-colors hover:bg-emerald-400"
           >
             Check Order
           </button>

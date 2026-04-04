@@ -22,10 +22,10 @@ export default function SurahChoiceGrid({
 
   const styles = {
     default:
-      "border-border hover:border-emerald-200 hover:bg-emerald-50 cursor-pointer",
-    correct: "border-emerald-400 bg-emerald-50",
-    incorrect: "border-gold-300 bg-gold-50",
-    reveal: "border-emerald-400 bg-emerald-50 opacity-60",
+      "border-[#e0e0d8] bg-surface hover:border-emerald-700/50 hover:bg-emerald-700/4 cursor-pointer",
+    correct: "border-[1.5px] border-[#4caf82] bg-[#f0faf4]",
+    incorrect: "border-[1.5px] border-[#e8a87c] bg-[#fff8f0] animate-shake",
+    reveal: "border-[1.5px] border-[#4caf82] bg-[#f0faf4] opacity-60",
   };
 
   return (
@@ -35,7 +35,7 @@ export default function SurahChoiceGrid({
           key={id}
           onClick={() => onSelect(id)}
           disabled={selectedId !== null}
-          className={`w-full rounded-lg border p-4 text-left transition-colors ${styles[getState(id)]}`}>
+          className={`min-h-16 w-full rounded-[10px] border px-5 py-4 text-left transition-all duration-150 ${styles[getState(id)]}`}>
           <div className="font-medium">
             {id}. {SURAH_NAMES[id]}
           </div>

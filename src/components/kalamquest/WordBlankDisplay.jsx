@@ -44,11 +44,11 @@ export default function WordBlankDisplay({
   let revealIdx = 0;
 
   return (
-    <div className="rounded-lg border border-border p-6 text-center">
-      <p className="mb-4 text-sm font-medium text-muted">
+    <div className="rounded-[14px] border border-emerald-700/15 bg-surface px-6 py-7 text-center">
+      <p className="mb-4 text-[13px] font-medium uppercase tracking-[0.08em] text-muted">
         Fill in the missing {blankCount === 1 ? "word" : "words"}
       </p>
-      <div dir="rtl" lang="ar" className="font-arabic text-2xl leading-[2.6] sm:text-3xl">
+      <div dir="rtl" lang="ar" className="font-arabic text-[26px] leading-[2.0]">
         {display.map((item, i) => {
           if (!item.blanked) {
             return (
@@ -80,9 +80,9 @@ export default function WordBlankDisplay({
             return (
               <span
                 key={i}
-                className="mx-0.5 inline-block border-b-2 border-dashed border-emerald-200 px-4 text-muted"
+                className="mx-0.5 inline-block min-w-[60px] border-b-[2.5px] border-emerald-700 px-4"
               >
-                ـــ
+                &nbsp;
               </span>
             );
           }
@@ -97,7 +97,7 @@ export default function WordBlankDisplay({
               onChange={(e) => handleInputChange(currentBlankIdx, e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={disabled}
-              className="font-arabic mx-1 inline-block w-28 border-b-2 border-dashed border-emerald-200 bg-transparent px-2 text-center text-2xl focus:border-emerald-700 focus:outline-none disabled:opacity-50 sm:w-36 sm:text-3xl"
+              className="font-arabic mx-1 inline-block w-28 border-b-[2.5px] border-emerald-700 bg-transparent px-2 text-center text-[26px] focus:border-emerald-400 focus:outline-none disabled:opacity-50 sm:w-36"
               placeholder="..."
             />
           );

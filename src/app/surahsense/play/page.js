@@ -311,7 +311,7 @@ function SurahSenseGameInner() {
   if (!clue) return null;
 
   return (
-    <div className={`mx-auto flex h-dvh flex-col px-4 ${currentMode === "page" ? "max-w-3xl" : "max-w-[480px]"}`}>
+    <div className={`mx-auto flex h-dvh flex-col px-5 ${currentMode === "page" ? "max-w-3xl" : "max-w-[680px]"}`}>
       {/* Top bar */}
       <div className="flex items-center justify-between py-3">
         <BackButton />
@@ -323,7 +323,7 @@ function SurahSenseGameInner() {
           )}
           <button
             onClick={() => setShowResults(true)}
-            className="rounded-lg border border-border px-4 py-1.5 text-sm hover:bg-emerald-50"
+            className="rounded-lg border border-emerald-700 px-4 py-1.5 text-sm text-emerald-700 transition-colors hover:bg-emerald-50"
           >
             End
           </button>
@@ -332,21 +332,21 @@ function SurahSenseGameInner() {
 
       {/* Question zone — fills middle, scrolls if needed */}
       <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto py-4">
-        <div className="w-full">
+        <div className="w-full space-y-4">
           <ScoreCounter correct={score.correct} total={score.total} />
-          <div className="mt-2 text-center text-sm font-medium text-muted">
+          <p className="text-center text-[13px] font-medium uppercase tracking-[0.08em] text-muted">
             Which surah is this?
-          </div>
+          </p>
 
           {/* Clue area */}
-          <div className="mt-3">
+          <div>
             {clue.type === "page" && (
               <MushafPage verses={clue.verses} pageNumber={clue.pageNumber} />
             )}
             {(clue.type === "ayah" || clue.type === "ayaat") && (
               <>
                 <AyahClue verses={clue.verses} showTranslation={showTranslation} showTransliteration={showTransliteration} />
-                <div className="mt-2 flex justify-end">
+                <div className="mt-3 flex justify-end">
                   <DisplayOptionsToggle
                     translationEnabled={showTranslation}
                     onTranslationToggle={() => setShowTranslation((prev) => !prev)}
@@ -366,7 +366,7 @@ function SurahSenseGameInner() {
           </div>
 
           {/* Hint bar */}
-          <div className="mt-3">
+          <div>
             {(() => {
               const ch = allChapters.find((c) => c.id === correctSurahId);
               return ch ? (
