@@ -1,18 +1,21 @@
+import AudioPlayButton from "@/components/shared/AudioPlayButton";
+
 export default function QuestionCard({
   verse,
   direction,
   showTranslation = true,
   showTransliteration = false,
+  reciterId = null,
 }) {
   return (
-    <div className="rounded-lg border border-border p-6 text-center">
-      <p className="text-sm font-medium text-muted">
+    <div className="rounded-[14px] border border-emerald-700/15 bg-surface px-6 py-7 text-center">
+      <p className="mb-4 text-[13px] font-medium uppercase tracking-[0.08em] text-muted">
         {direction === "next" ? "What comes next?" : "What came before?"}
       </p>
       <p
         dir="rtl"
         lang="ar"
-        className="mt-4 font-arabic text-3xl leading-loose">
+        className="font-arabic text-[26px] leading-[2.0]">
         {verse.textUthmani}
       </p>
       {showTransliteration && verse.transliteration && (
@@ -22,6 +25,11 @@ export default function QuestionCard({
       )}
       {showTranslation && verse.translation && (
         <p className="mt-2 text-sm text-muted">{verse.translation}</p>
+      )}
+      {reciterId && (
+        <div className="mt-3 flex justify-center">
+          <AudioPlayButton verseKey={verse.verseKey} reciterId={reciterId} />
+        </div>
       )}
     </div>
   );

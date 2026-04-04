@@ -23,6 +23,7 @@ import TypingInput from "@/components/ayahflow/TypingInput";
 import DiffView from "@/components/ayahflow/DiffView";
 import { diffWords } from "@/lib/normalize-arabic";
 import DisplayOptionsToggle from "@/components/ayahflow/DisplayOptionsToggle";
+import ReciterToggle from "@/components/shared/ReciterToggle";
 import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 const NEXT_DELAY_MS = 1200;
@@ -41,6 +42,7 @@ function AyahFlowGameInner() {
 
   const translationParam = searchParams.get("translation") ?? DEFAULT_TRANSLATION_ID;
   const transliterationParam = searchParams.get("transliteration") === "on";
+  const reciterParam = searchParams.get("reciter") ?? "off";
   const translationId = translationParam === "off" ? DEFAULT_TRANSLATION_ID : translationParam;
 
   const [loading, setLoading] = useState(true);
@@ -63,6 +65,7 @@ function AyahFlowGameInner() {
   const [typingDiff, setTypingDiff] = useState(null);
   const [showTranslation, setShowTranslation] = useState(translationParam !== "off");
   const [showTransliteration, setShowTransliteration] = useState(transliterationParam);
+  const [reciterId, setReciterId] = useState(reciterParam !== "off" ? reciterParam : null);
 
   const surahCacheRef = useRef({});
   const verseMapRef = useRef(new Map());
@@ -305,38 +308,29 @@ function AyahFlowGameInner() {
   if (!question) return null;
 
   return (
-    <div className="mx-auto flex h-dvh max-w-[480px] flex-col px-4">
-      {/* Top bar — fixed at top */}
+    <div className="mx-auto flex h-dvh max-w-[680px] flex-col px-5">
+      {/* Top bar */}
       <div className="flex items-center justify-between py-3">
         <BackButton />
-        <div className="flex items-center gap-2">
-          <DisplayOptionsToggle
-            translationEnabled={showTranslation}
-            onTranslationToggle={() => setShowTranslation((prev) => !prev)}
-            transliterationEnabled={showTransliteration}
-            onTransliterationToggle={() => setShowTransliteration((prev) => !prev)}
-          />
-          <button
-            onClick={handleEnd}
-            className="rounded-lg border border-border px-4 py-1.5 text-sm hover:bg-emerald-50">
-            End
-          </button>
-        </div>
+        <button
+          onClick={handleEnd}
+          className="rounded-lg border border-emerald-700 px-4 py-1.5 text-sm text-emerald-700 transition-colors hover:bg-emerald-50">
+          End
+        </button>
       </div>
 
       {/* Question zone — fills middle, scrolls if needed, content centered */}
       <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto py-4">
-        <div className="w-full">
+        <div className="w-full space-y-4">
           <ScoreCounter correct={score.correct} total={score.total} />
-          <div className="mt-3">
-            <QuestionCard
-              verse={question.prompt}
-              direction={question.direction}
-              showTranslation={showTranslation}
-              showTransliteration={showTransliteration}
-            />
-          </div>
-          <div className="mt-3">
+          <QuestionCard
+            verse={question.prompt}
+            direction={question.direction}
+            showTranslation={showTranslation}
+            showTransliteration={showTransliteration}
+            reciterId={reciterId}
+          />
+          <div>
             <HintBar
               ayahNumber={question.prompt.verseNumber}
               chapterId={question.prompt.chapterId}
@@ -346,6 +340,19 @@ function AyahFlowGameInner() {
               fiftyFiftyDisabled={fiftyFiftyUsedThisRound || fiftyFiftyRemaining <= 0 || selectedKey !== null}
               fiftyFiftyHidden={answerMode === "type"}
               onFiftyFifty={handleFiftyFifty}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            {reciterId ? (
+              <ReciterToggle value={reciterId} onChange={setReciterId} />
+            ) : (
+              <div />
+            )}
+            <DisplayOptionsToggle
+              translationEnabled={showTranslation}
+              onTranslationToggle={() => setShowTranslation((prev) => !prev)}
+              transliterationEnabled={showTransliteration}
+              onTransliterationToggle={() => setShowTransliteration((prev) => !prev)}
             />
           </div>
         </div>

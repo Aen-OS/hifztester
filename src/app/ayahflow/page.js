@@ -8,6 +8,7 @@ import DirectionToggle from "@/components/ayahflow/DirectionToggle";
 import AnswerModeSelector from "@/components/ayahflow/AnswerModeSelector";
 import BackButton from "@/components/BackButton";
 import DisplayOptionsSelector from "@/components/ayahflow/DisplayOptionsSelector";
+import ReciterSelector from "@/components/shared/ReciterSelector";
 import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 export default function AyahFlowSetup() {
@@ -19,6 +20,7 @@ export default function AyahFlowSetup() {
   const [translationEnabled, setTranslationEnabled] = useState(true);
   const [translationId, setTranslationId] = useState(DEFAULT_TRANSLATION_ID);
   const [transliterationEnabled, setTransliterationEnabled] = useState(false);
+  const [reciterId, setReciterId] = useState(null);
 
   function handleStart() {
     const params = new URLSearchParams({
@@ -29,6 +31,7 @@ export default function AyahFlowSetup() {
       testPrevious: testPrevious.toString(),
       translation: translationEnabled ? translationId : "off",
       transliteration: transliterationEnabled ? "on" : "off",
+      reciter: reciterId ?? "off",
     });
     router.push(`/ayahflow/play?${params.toString()}`);
   }
@@ -82,6 +85,13 @@ export default function AyahFlowSetup() {
             transliterationEnabled={transliterationEnabled}
             onTransliterationEnabledChange={setTransliterationEnabled}
           />
+        </section>
+
+        <section>
+          <h2 className="mb-2.5 text-sm font-medium uppercase tracking-wide text-muted">
+            Audio
+          </h2>
+          <ReciterSelector value={reciterId} onChange={setReciterId} />
         </section>
 
         <button
