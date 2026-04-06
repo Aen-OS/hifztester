@@ -7,6 +7,7 @@ import {
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import QuranAuthHeader from "@/components/QuranAuthHeader";
 
 const Rakkasfont = Rakkas({
   variable: "--font-rakkas",
@@ -42,7 +43,10 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={`${Rakkasfont.variable} ${DMSerifText.variable} ${DMSerifDisplay.variable} ${scheherazade.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <QuranAuthHeader />
+        {children}
+      </body>
       <Analytics />
       <SpeedInsights />
     </html>
