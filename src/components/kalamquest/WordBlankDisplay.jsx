@@ -55,7 +55,7 @@ export default function WordBlankDisplay({
           if (!item.blanked) {
             return (
               <span key={i} className="mx-0.5">
-                {item.word}
+                {item.word}{" "}
               </span>
             );
           }
@@ -73,7 +73,7 @@ export default function WordBlankDisplay({
                     : "bg-gold-50 text-gold-500"
                 }`}
               >
-                {revealed}
+                {revealed}{" "}
               </span>
             );
           }
