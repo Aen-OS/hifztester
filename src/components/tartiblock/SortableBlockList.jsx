@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import BlockItem from "./BlockItem";
+import { endOfVerse } from "@/lib/verse-marker";
 
 export default function SortableBlockList({
   blocks,
@@ -93,7 +94,9 @@ export default function SortableBlockList({
   return (
     <div className="flex flex-col gap-2">
       {blocks.map((block, idx) => {
-        const text = block.text || block.verse?.textUthmani || "";
+        const verseNum = block.verse?.verseNumber;
+        const raw = block.text || block.verse?.textUthmani || "";
+        const text = verseNum != null ? `${raw}${endOfVerse(verseNum)}` : raw;
         const translation = block.verse?.translation || null;
         const transliteration = block.verse?.transliteration || null;
 

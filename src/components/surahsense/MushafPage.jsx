@@ -1,5 +1,7 @@
 "use client";
 
+import { endOfVerse } from "@/lib/verse-marker";
+
 export default function MushafPage({ verses, pageNumber }) {
   return (
     <div className="rounded-[14px] border border-emerald-700/15 p-7" style={{ background: "#faf8f3" }}>
@@ -11,7 +13,7 @@ export default function MushafPage({ verses, pageNumber }) {
       >
         {verses.map((v) => (
           <span key={v.verseKey}>
-            {v.textUthmani}{" "}
+            {v.textUthmani}{endOfVerse(v.verseNumber)}{" "}
           </span>
         ))}
       </div>

@@ -61,6 +61,7 @@ function KalamQuestGameInner() {
   const [wordReveal, setWordReveal] = useState(null);
   const [wordRevealCorrect, setWordRevealCorrect] = useState(false);
   const [eliminatedWordAnswers, setEliminatedWordAnswers] = useState([]);
+  const [currentVerseNumber, setCurrentVerseNumber] = useState(null);
 
   // Surah/page mode state
   const [contextAyahs, setContextAyahs] = useState([]);
@@ -129,6 +130,7 @@ function KalamQuestGameInner() {
       if (mode === "ayah") {
         const verse = prompt.verse || verses[Math.floor(Math.random() * verses.length)];
         setCurrentChapterId(verse.chapterId);
+        setCurrentVerseNumber(verse.verseNumber);
 
         const { display, blankedWords: bw, blankedIndices: bi } = blankWords(verse.textUthmani, difficulty);
         setWordDisplay(display);
@@ -408,6 +410,7 @@ function KalamQuestGameInner() {
                 disabled={selectedWordAnswer !== null}
                 revealWords={wordReveal}
                 revealCorrect={wordRevealCorrect}
+                verseNumber={currentVerseNumber}
               />
             ) : (
               <AyahGapDisplay

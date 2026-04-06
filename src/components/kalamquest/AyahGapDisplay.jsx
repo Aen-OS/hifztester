@@ -1,5 +1,7 @@
 "use client";
 
+import { endOfVerse } from "@/lib/verse-marker";
+
 /**
  * Display a list of ayahs with one replaced by a gap marker.
  * Props:
@@ -26,7 +28,7 @@ export default function AyahGapDisplay({ contextAyahs, label, useMushafLayout })
                 ؟
               </span>
             ) : (
-              <span key={item.verseKey}>{item.textUthmani} </span>
+              <span key={item.verseKey}>{item.textUthmani}{endOfVerse(item.verseNumber)}{" "}</span>
             ),
           )}
         </div>
@@ -57,7 +59,7 @@ export default function AyahGapDisplay({ contextAyahs, label, useMushafLayout })
             </div>
           ) : (
             <p key={item.verseKey} className="px-2">
-              {item.textUthmani}
+              {item.textUthmani}{endOfVerse(item.verseNumber)}
             </p>
           ),
         )}

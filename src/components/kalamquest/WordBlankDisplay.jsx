@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { endOfVerse } from "@/lib/verse-marker";
 
 /**
  * Display an ayah with blanked words.
@@ -14,6 +15,7 @@ export default function WordBlankDisplay({
   disabled,
   revealWords,
   revealCorrect,
+  verseNumber,
 }) {
   const blankCount = display.filter((w) => w.blanked).length;
   const [inputs, setInputs] = useState(() => Array(blankCount).fill(""));
@@ -102,6 +104,9 @@ export default function WordBlankDisplay({
             />
           );
         })}
+        {verseNumber != null && (
+          <span className="mx-0.5">{endOfVerse(verseNumber)}</span>
+        )}
       </div>
 
       {answerMode === "type" && !disabled && !revealWords && (

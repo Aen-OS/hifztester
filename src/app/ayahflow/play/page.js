@@ -18,6 +18,7 @@ import ChoiceGrid from "@/components/ayahflow/ChoiceGrid";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
 import BackButton from "@/components/BackButton";
 import HintBar from "@/components/ayahflow/HintBar";
+import { endOfVerse } from "@/lib/verse-marker";
 import AnswerModeToggle from "@/components/ayahflow/AnswerModeToggle";
 import TypingInput from "@/components/ayahflow/TypingInput";
 import DiffView from "@/components/ayahflow/DiffView";
@@ -377,7 +378,7 @@ function AyahFlowGameInner() {
           ) : selectedKey ? (
             <div className="rounded-xl border border-emerald-400 bg-emerald-50 p-4 text-center">
               <p dir="rtl" lang="ar" className="font-arabic text-xl leading-relaxed text-emerald-700">
-                {question.correctAnswer.textUthmani}
+                {question.correctAnswer.textUthmani}{endOfVerse(question.correctAnswer.verseNumber)}
               </p>
               <p className="mt-2 text-sm text-emerald-400">Correct!</p>
             </div>

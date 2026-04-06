@@ -1,6 +1,7 @@
 "use client";
 
 import AudioPlayButton from "@/components/shared/AudioPlayButton";
+import { endOfVerse } from "@/lib/verse-marker";
 
 export default function ManaMatchQuestionCard({
   verse,
@@ -17,7 +18,7 @@ export default function ManaMatchQuestionCard({
         lang="ar"
         className="font-arabic text-[26px] leading-[2.0]"
       >
-        {verse.textUthmani}
+        {verse.textUthmani}{endOfVerse(verse.verseNumber)}
       </p>
       {showTransliteration && verse.transliteration && (
         <p className="mt-3 text-sm italic text-muted">
