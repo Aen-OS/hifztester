@@ -44,23 +44,23 @@ export default function AyahGapDisplay({ contextAyahs, label, useMushafLayout })
   }
 
   return (
-    <div className="rounded-[14px] border border-emerald-700/15 bg-surface px-6 py-7 text-center">
+    <div className="rounded-[14px] border border-emerald-700/15 bg-surface px-6 py-7">
       {label && (
-        <p className="mb-4 text-[13px] font-medium uppercase tracking-[0.08em] text-muted">{label}</p>
+        <p className="mb-4 text-center text-[13px] font-medium uppercase tracking-[0.08em] text-muted">{label}</p>
       )}
-      <div dir="rtl" lang="ar" className="font-arabic space-y-2 text-[26px] leading-[2.0]">
+      <div dir="rtl" lang="ar" className="font-arabic text-[26px] leading-[2.0]">
         {contextAyahs.map((item) =>
           item.gap ? (
-            <div
+            <span
               key={item.verseKey}
-              className="mx-auto rounded-lg border-2 border-dashed border-emerald-700/30 bg-emerald-50 px-4 py-3 text-base text-muted"
+              className="mx-1 inline-block rounded-lg border-2 border-dashed border-emerald-700/30 bg-emerald-50 px-4 py-1 text-base text-muted align-middle"
             >
               ؟ ـــــــــــــ ؟
-            </div>
+            </span>
           ) : (
-            <p key={item.verseKey} className="px-2">
-              {item.textUthmani}{endOfVerse(item.verseNumber)}
-            </p>
+            <span key={item.verseKey}>
+              {item.textUthmani}{endOfVerse(item.verseNumber)}{" "}
+            </span>
           ),
         )}
       </div>
