@@ -17,7 +17,9 @@ export default function QuranAuthHeader() {
 
         if (data.connected) {
           const streakRes = await fetch("/api/streak", {
-            headers: { "x-timezone": Intl.DateTimeFormat().resolvedOptions().timeZone },
+            headers: {
+              "x-timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+            },
           });
 
           if (streakRes.ok) {
@@ -52,8 +54,7 @@ export default function QuranAuthHeader() {
       <div className="w-full border-b border-border bg-surface px-4 py-2 text-center font-body">
         <a
           href="/api/auth/quran"
-          className="text-xs text-emerald-700 underline underline-offset-2 hover:text-emerald-400 transition-colors"
-        >
+          className="text-xs text-emerald-700 underline underline-offset-2 hover:text-emerald-400 transition-colors">
           Connect Quran.com
         </a>
       </div>
@@ -61,14 +62,13 @@ export default function QuranAuthHeader() {
   }
 
   return (
-    <div className="w-full border-b border-border bg-surface px-4 py-2 font-body">
+    <div className="w-full border-b border-border bg-surface px-4 py-2 font-body ">
       <div className="mx-auto flex max-w-[680px] items-center justify-between">
         <span className="text-xs text-ink">
           {error === "expired" ? (
             <a
               href="/api/auth/quran"
-              className="text-emerald-700 underline underline-offset-2"
-            >
+              className="text-emerald-700 underline underline-offset-2">
               Reconnect Quran.com
             </a>
           ) : error === "unavailable" ? (
@@ -77,16 +77,14 @@ export default function QuranAuthHeader() {
             <>
               <span className="font-display text-emerald-700">
                 {streak ?? 0} day{streak !== 1 ? "s" : ""}
-              </span>
-              {" "}
+              </span>{" "}
               <span className="text-muted">— Quran.com Reading Streak</span>
             </>
           )}
         </span>
         <a
           href="/api/auth/quran/logout"
-          className="text-xs text-muted hover:text-ink transition-colors"
-        >
+          className="text-xs text-muted hover:text-ink transition-colors">
           Disconnect
         </a>
       </div>
