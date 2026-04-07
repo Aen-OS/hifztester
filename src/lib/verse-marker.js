@@ -10,3 +10,7 @@ function toArabicNumeral(n) {
 export function endOfVerse(verseNumber) {
   return ` \u06DD${toArabicNumeral(verseNumber)}`;
 }
+
+export function endOfVerseNoNumber() {
+  return " \u06DD";
+}

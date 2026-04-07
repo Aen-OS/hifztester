@@ -1,5 +1,5 @@
 import AudioPlayButton from "@/components/shared/AudioPlayButton";
-import { endOfVerse } from "@/lib/verse-marker";
+import { endOfVerseNoNumber } from "@/lib/verse-marker";
 
 export default function QuestionCard({
   verse,
@@ -17,7 +17,7 @@ export default function QuestionCard({
         dir="rtl"
         lang="ar"
         className="font-arabic text-[26px] leading-[2.0]">
-        {verse.textUthmani}{endOfVerse(verse.verseNumber)}
+        {verse.textUthmani}{endOfVerseNoNumber()}
       </p>
       {showTransliteration && verse.transliteration && (
         <p className="mt-3 text-sm italic text-muted">

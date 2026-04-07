@@ -1,6 +1,6 @@
 "use client";
 
-import { endOfVerse } from "@/lib/verse-marker";
+import { endOfVerseNoNumber } from "@/lib/verse-marker";
 
 export default function ChoiceCard({
   verse,
@@ -23,7 +23,7 @@ export default function ChoiceCard({
       disabled={state !== "default"}
       className={`min-h-16 w-full rounded-[10px] border px-5 py-4 text-center transition-all duration-150 ${styles[state]}`}>
       <p dir="rtl" lang="ar" className="font-arabic text-[22px] leading-relaxed">
-        {verse.textUthmani}{endOfVerse(verse.verseNumber)}
+        {verse.textUthmani}{endOfVerseNoNumber()}
       </p>
       {showTransliteration && verse.transliteration && (
         <p className="mt-1.5 text-xs italic text-muted">
