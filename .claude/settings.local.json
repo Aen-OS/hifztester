@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:api-docs.quran.foundation)",
       "Bash(npm run:*)",
-      "WebFetch(domain:api.quran.com)"
+      "WebFetch(domain:api.quran.com)",
+      "WebFetch(domain:resend.com)"
     ]
   }
 }

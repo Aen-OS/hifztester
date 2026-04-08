@@ -4,7 +4,7 @@ import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchVersesForScope } from "@/lib/fetch-verses";
 import { fetchVersesForPage } from "@/lib/fetch-chapters";
-import { shuffle } from "@/lib/game-engine";
+import { shuffle, queueItemKey, avoidRepeat } from "@/lib/game-engine";
 import { diffWords } from "@/lib/normalize-arabic";
 import { SURAH_NAMES } from "@/lib/quran-data";
 import {
@@ -206,7 +206,9 @@ function KalamQuestGameInner() {
   function advance() {
     const nextIdx = promptIndex + 1;
     if (nextIdx >= promptQueue.length) {
+      const lastKey = queueItemKey(promptQueue[promptQueue.length - 1]);
       const newQueue = createKalamQuestQueue(verses, gameMode);
+      avoidRepeat(newQueue, lastKey);
       setPromptQueue(newQueue);
       setPromptIndex(0);
     } else {

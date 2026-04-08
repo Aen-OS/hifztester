@@ -13,6 +13,7 @@ import {
   scrambleBlocks,
   scoreArrangement,
 } from "@/lib/tartiblock-engine";
+import { queueItemKey, avoidRepeat } from "@/lib/game-engine";
 import SortableBlockList from "@/components/tartiblock/SortableBlockList";
 import TartibLockHintBar from "@/components/tartiblock/TartibLockHintBar";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
@@ -147,7 +148,9 @@ function TartibLockGameInner() {
   function advance() {
     const nextIdx = promptIndex + 1;
     if (nextIdx >= promptQueue.length) {
+      const lastKey = queueItemKey(promptQueue[promptQueue.length - 1]);
       const newQueue = createTartibLockQueue(verses, gameMode);
+      avoidRepeat(newQueue, lastKey);
       setPromptQueue(newQueue);
       setPromptIndex(0);
     } else {

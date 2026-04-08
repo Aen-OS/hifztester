@@ -141,6 +141,35 @@ export function shuffle(arr) {
   return arr;
 }
 
+/**
+ * Derive a comparable key from any prompt-queue item.
+ * Works for plain verse objects, surah/page prompt objects, and raw IDs.
+ */
+export function queueItemKey(item) {
+  if (item == null) return undefined;
+  if (typeof item === "number" || typeof item === "string") return item;
+  return (
+    item.verseKey ?? item.verse?.verseKey ?? item.surahId ?? item.pageNumber
+  );
+}
+
+/**
+ * If the first item in `queue` has the same key as `lastKey`, swap it with
+ * another random position so the user never sees the same prompt twice in a row
+ * across queue boundaries.
+ */
+export function avoidRepeat(queue, lastKey) {
+  if (
+    queue.length > 1 &&
+    lastKey !== undefined &&
+    queueItemKey(queue[0]) === lastKey
+  ) {
+    const swapIdx = 1 + Math.floor(Math.random() * (queue.length - 1));
+    [queue[0], queue[swapIdx]] = [queue[swapIdx], queue[0]];
+  }
+  return queue;
+}
+
 export function createPromptQueue(verses, boundaryKeys) {
   const boundarySet = new Set(boundaryKeys);
   const eligible = verses.filter((v) => !boundarySet.has(v.verseKey));

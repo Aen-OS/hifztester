@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import FeedbackModal from "@/components/FeedbackModal";
 
 export default function QuranAuthHeader() {
   const [connected, setConnected] = useState(false);
   const [streak, setStreak] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   useEffect(() => {
     async function checkStatus() {
@@ -41,28 +43,44 @@ export default function QuranAuthHeader() {
     checkStatus();
   }, []);
 
+  const feedbackButton = (
+    <button
+      onClick={() => setFeedbackOpen(true)}
+      className="text-xs text-muted hover:text-ink transition-colors">
+      Feedback
+    </button>
+  );
+
   if (loading) {
     return (
-      <div className="w-full border-b border-border bg-surface px-4 py-2 text-center text-xs text-muted font-body">
-        Loading...
+      <div className="w-full border-b border-border bg-surface px-4 py-2 font-body">
+        <div className="mx-auto flex max-w-[680px] items-center justify-between">
+          <span className="text-xs text-muted">Loading...</span>
+          {feedbackButton}
+        </div>
+        <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
       </div>
     );
   }
 
   if (!connected) {
     return (
-      <div className="w-full border-b border-border bg-surface px-4 py-2 text-center font-body">
-        <a
-          href="/api/auth/quran"
-          className="text-xs text-emerald-700 underline underline-offset-2 hover:text-emerald-400 transition-colors">
-          Connect Quran.com
-        </a>
+      <div className="w-full border-b border-border bg-surface px-4 py-2 font-body">
+        <div className="mx-auto flex max-w-[680px] items-center justify-between">
+          <a
+            href="/api/auth/quran"
+            className="text-xs text-emerald-700 underline underline-offset-2 hover:text-emerald-400 transition-colors">
+            Connect Quran.com
+          </a>
+          {feedbackButton}
+        </div>
+        <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
       </div>
     );
   }
 
   return (
-    <div className="w-full border-b border-border bg-surface px-4 py-2 font-body ">
+    <div className="w-full border-b border-border bg-surface px-4 py-2 font-body">
       <div className="mx-auto flex max-w-[680px] items-center justify-between">
         <span className="text-xs text-ink">
           {error === "expired" ? (
@@ -82,12 +100,16 @@ export default function QuranAuthHeader() {
             </>
           )}
         </span>
-        <a
-          href="/api/auth/quran/logout"
-          className="text-xs text-muted hover:text-ink transition-colors">
-          Disconnect
-        </a>
+        <span className="flex items-center gap-3">
+          {feedbackButton}
+          <a
+            href="/api/auth/quran/logout"
+            className="text-xs text-muted hover:text-ink transition-colors">
+            Disconnect
+          </a>
+        </span>
       </div>
+      <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );
 }

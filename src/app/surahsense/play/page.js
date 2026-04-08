@@ -19,6 +19,7 @@ import {
   redactSurahName,
   shuffle,
 } from "@/lib/surahsense-engine";
+import { queueItemKey, avoidRepeat } from "@/lib/game-engine";
 import { SURAH_NAMES } from "@/lib/quran-data";
 import MushafPage from "@/components/surahsense/MushafPage";
 import AyahClue from "@/components/surahsense/AyahClue";
@@ -195,7 +196,9 @@ function SurahSenseGameInner() {
   function advance() {
     const nextIdx = promptIndex + 1;
     if (nextIdx >= promptQueue.length) {
+      const lastKey = queueItemKey(promptQueue[promptQueue.length - 1]);
       const newQueue = createSurahPromptQueue(scopeSurahIds);
+      avoidRepeat(newQueue, lastKey);
       setPromptQueue(newQueue);
       setPromptIndex(0);
     } else {

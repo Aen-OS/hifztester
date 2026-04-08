@@ -12,6 +12,8 @@ import {
   buildQuestion,
   getNextVerseKey,
   getPrevVerseKey,
+  queueItemKey,
+  avoidRepeat,
 } from "@/lib/game-engine";
 import QuestionCard from "@/components/ayahflow/QuestionCard";
 import ChoiceGrid from "@/components/ayahflow/ChoiceGrid";
@@ -172,7 +174,9 @@ function AyahFlowGameInner() {
       setPhase("next");
       const nextIdx = promptIndex + 1;
       if (nextIdx >= promptQueue.length) {
+        const lastKey = queueItemKey(promptQueue[promptQueue.length - 1]);
         const newQueue = createPromptQueue(verses, boundaryKeys);
+        avoidRepeat(newQueue, lastKey);
         setPromptQueue(newQueue);
         setPromptIndex(0);
       } else {

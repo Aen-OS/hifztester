@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchVersesForScope, fetchSurahForDistractors } from "@/lib/fetch-verses";
 import { createManaMatchQueue, buildManaMatchQuestion } from "@/lib/manamatch-engine";
+import { queueItemKey, avoidRepeat } from "@/lib/game-engine";
 import ManaMatchQuestionCard from "@/components/manamatch/ManaMatchQuestionCard";
 import TranslationChoiceGrid from "@/components/manamatch/TranslationChoiceGrid";
 import ScoreCounter from "@/components/ayahflow/ScoreCounter";
@@ -112,7 +113,9 @@ function ManaMatchGameInner() {
   function advance() {
     const nextIdx = promptIndex + 1;
     if (nextIdx >= promptQueue.length) {
+      const lastKey = queueItemKey(promptQueue[promptQueue.length - 1]);
       const newQueue = createManaMatchQueue(verses);
+      avoidRepeat(newQueue, lastKey);
       setPromptQueue(newQueue);
       setPromptIndex(0);
     } else {

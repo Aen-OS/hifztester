@@ -58,8 +58,10 @@ export async function POST(request) {
     );
   }
 
-  const senderName = (name && name.trim()) || "Anonymous";
-  const senderEmail = (email && email.trim()) || "Not provided";
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const senderName = esc((name && name.trim()) || "Anonymous");
+  const senderEmail = esc((email && email.trim()) || "Not provided");
+  const escapedMessage = esc(message.trim());
   const toEmail = process.env.FEEDBACK_TO_EMAIL;
 
   if (!toEmail) {
@@ -106,7 +108,7 @@ export async function POST(request) {
                   <td>
                     <p style="margin:0 0 8px 0;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Message</p>
                     <div style="background-color:#f9fafb;border-left:4px solid #0f5c3a;padding:16px;border-radius:0 4px 4px 0;">
-                      <p style="margin:0;font-size:15px;color:#111827;line-height:1.6;white-space:pre-wrap;">${message.trim()}</p>
+                      <p style="margin:0;font-size:15px;color:#111827;line-height:1.6;white-space:pre-wrap;">${escapedMessage}</p>
                     </div>
                   </td>
                 </tr>
@@ -135,7 +137,7 @@ export async function POST(request) {
     });
 
     if (error) {
-      console.error("Resend error:", error);
+      console.error("Resend error:", JSON.stringify(error, null, 2));
       return Response.json(
         { error: "Failed to send feedback. Please try again." },
         { status: 500 }
