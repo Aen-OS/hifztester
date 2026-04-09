@@ -39,7 +39,7 @@ export async function GET() {
   const params = new URLSearchParams({
     response_type: "code",
     client_id: clientId,
-    redirect_uri: `${baseUrl}/api/auth/quran/callback`,
+    redirect_uri: `${baseUrl}/api/auth/callback`,
     scope: scopes,
     state,
     nonce,
