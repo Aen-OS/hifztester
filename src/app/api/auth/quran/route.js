@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import {
   generateCodeVerifier,
   generateCodeChallenge,
@@ -10,14 +10,15 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request) {
   const authUrl = process.env.QF_AUTH_URL;
   const clientId = process.env.QF_CLIENT_ID;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const scopes = process.env.QF_SCOPES;
 
   if (!authUrl || !clientId || !baseUrl || !scopes) {
-    return Response.json(
+    console.error("[auth/quran] Missing config:", { authUrl: !!authUrl, clientId: !!clientId, baseUrl: !!baseUrl, scopes: !!scopes });
+    return NextResponse.json(
       { error: "Missing OAuth2 configuration" },
       { status: 500 }
     );
@@ -27,16 +28,6 @@ export async function GET() {
   const nonce = generateNonce();
   const codeVerifier = generateCodeVerifier();
   const codeChallenge = await generateCodeChallenge(codeVerifier);
-
-  const cookieStore = await cookies();
-  cookieStore.set(TOKEN_COOKIE_NAMES.oauthState, state, {
-    ...COOKIE_OPTIONS,
-    maxAge: 600,
-  });
-  cookieStore.set(TOKEN_COOKIE_NAMES.codeVerifier, codeVerifier, {
-    ...COOKIE_OPTIONS,
-    maxAge: 600,
-  });
 
   const params = new URLSearchParams({
     response_type: "code",
@@ -50,9 +41,18 @@ export async function GET() {
   });
 
   const redirectUrl = `${authUrl}/oauth2/auth?${params.toString()}`;
+  console.log("[auth/quran] Redirecting to:", redirectUrl);
 
-  return new Response(null, {
-    status: 307,
-    headers: { Location: redirectUrl },
+  const response = NextResponse.redirect(redirectUrl, { status: 307 });
+
+  response.cookies.set(TOKEN_COOKIE_NAMES.oauthState, state, {
+    ...COOKIE_OPTIONS,
+    maxAge: 600,
   });
+  response.cookies.set(TOKEN_COOKIE_NAMES.codeVerifier, codeVerifier, {
+    ...COOKIE_OPTIONS,
+    maxAge: 600,
+  });
+
+  return response;
 }
