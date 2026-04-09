@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import {
   generateCodeVerifier,
   generateCodeChallenge,
@@ -8,6 +7,8 @@ import {
   COOKIE_OPTIONS,
   TOKEN_COOKIE_NAMES,
 } from "@/lib/qf-auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const authUrl = process.env.QF_AUTH_URL;
@@ -48,5 +49,10 @@ export async function GET() {
     code_challenge_method: "S256",
   });
 
-  redirect(`${authUrl}/oauth2/auth?${params.toString()}`);
+  const redirectUrl = `${authUrl}/oauth2/auth?${params.toString()}`;
+
+  return new Response(null, {
+    status: 307,
+    headers: { Location: redirectUrl },
+  });
 }
