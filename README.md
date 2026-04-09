@@ -16,3 +16,5 @@ Review Page
 ## To Do
 
 1. fix choice grid design and make it's background nicer (perhaps like a card itself)
+2. implement quran.com account connection/integration
+3. 
