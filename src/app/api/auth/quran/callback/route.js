@@ -28,7 +28,7 @@ export async function GET(request) {
   const tokenBody = new URLSearchParams({
     grant_type: "authorization_code",
     code,
-    redirect_uri: `${baseUrl}/api/auth/callback`,
+    redirect_uri: `${baseUrl}/api/auth/quran/callback`,
     code_verifier: codeVerifier,
   });
 
