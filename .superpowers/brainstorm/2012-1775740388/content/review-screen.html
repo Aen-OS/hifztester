@@ -1,0 +1,97 @@
+<h2>Post-Game Review Screen</h2>
+<p class="subtitle">Replaces the current "Session Complete" screen. Shown after every game ends.</p>
+
+<div class="mockup">
+  <div class="mockup-header">AyahFlow — Session Complete</div>
+  <div class="mockup-body" style="background:#0a0a0a; color:#e8e4dc; font-family:system-ui; padding:24px;">
+
+    <!-- Score summary -->
+    <div style="text-align:center; margin-bottom:24px;">
+      <div style="font-size:48px; font-weight:bold; color:#059669;">18/20</div>
+      <div style="font-size:14px; color:#9ca3af;">90% accuracy · 4m 32s</div>
+    </div>
+
+    <!-- Surah breakdown -->
+    <div style="margin-bottom:20px;">
+      <div style="font-size:12px; text-transform:uppercase; color:#6b7280; margin-bottom:10px; letter-spacing:0.05em;">Performance by Surah</div>
+
+      <!-- Al-Baqarah -->
+      <div style="background:#1a1a1a; border-radius:8px; padding:14px; margin-bottom:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:14px;">Al-Baqarah</span>
+          <span style="font-size:13px; color:#059669; font-weight:600;">12/13 — 92%</span>
+        </div>
+        <div style="background:#2a2a2a; border-radius:4px; height:6px; overflow:hidden;">
+          <div style="background:#059669; height:100%; width:92%; border-radius:4px;"></div>
+        </div>
+        <!-- Expanded ayah list -->
+        <div style="margin-top:10px; font-size:12px; color:#9ca3af;">
+          <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #222;">
+            <span>2:142</span><span style="color:#059669;">✓</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #222;">
+            <span>2:143</span><span style="color:#059669;">✓</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #222; background:#1f1215; margin:0 -14px; padding:4px 14px;">
+            <span style="color:#ef4444;">2:144 ✗</span>
+            <span style="color:#6b7280; font-size:11px;">You answered 2:146</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:4px 0;">
+            <span>2:145</span><span style="color:#059669;">✓</span>
+          </div>
+          <div style="font-size:11px; color:#4b5563; margin-top:4px;">+ 9 more correct</div>
+        </div>
+      </div>
+
+      <!-- Al-Imran -->
+      <div style="background:#1a1a1a; border-radius:8px; padding:14px; margin-bottom:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:14px;">Aal-E-Imran</span>
+          <span style="font-size:13px; color:#f59e0b; font-weight:600;">6/7 — 86%</span>
+        </div>
+        <div style="background:#2a2a2a; border-radius:4px; height:6px; overflow:hidden;">
+          <div style="background:#f59e0b; height:100%; width:86%; border-radius:4px;"></div>
+        </div>
+        <div style="font-size:11px; color:#4b5563; margin-top:8px;">Tap to expand</div>
+      </div>
+    </div>
+
+    <!-- Confidence update -->
+    <div style="margin-bottom:20px;">
+      <div style="font-size:12px; text-transform:uppercase; color:#6b7280; margin-bottom:10px; letter-spacing:0.05em;">Confidence Updated</div>
+      <div style="background:#1a1a1a; border-radius:8px; padding:14px; font-size:13px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span style="color:#9ca3af;">Strengthened</span>
+          <span style="color:#059669;">18 ayahs ↑</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:#9ca3af;">Needs work</span>
+          <span style="color:#ef4444;">2 ayahs ↓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prompt for anon users -->
+    <div style="background:#0f291e; border:1px solid #065f46; border-radius:8px; padding:12px; margin-bottom:20px; font-size:12px; color:#6ee7b7; text-align:center;">
+      Connect Quran.com to sync your progress across devices
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:flex; gap:10px;">
+      <div style="flex:1; background:#059669; color:white; text-align:center; padding:12px; border-radius:8px; font-size:14px; font-weight:600;">Play Again</div>
+      <div style="flex:1; background:#1a1a1a; color:#e8e4dc; text-align:center; padding:12px; border-radius:8px; font-size:14px; border:1px solid #333;">New Settings</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:24px;">
+  <h3>Key elements:</h3>
+  <ul>
+    <li><strong>Score + time</strong> at the top</li>
+    <li><strong>Per-surah bars</strong> with accuracy %, color-coded (green ≥90%, amber ≥70%, red &lt;70%)</li>
+    <li><strong>Expandable ayah list</strong> within each surah — wrong answers highlighted with what the user chose</li>
+    <li><strong>Confidence summary</strong> — how many ayahs were strengthened vs weakened</li>
+    <li><strong>Sync prompt</strong> — only shown for anonymous users</li>
+    <li><strong>Play Again / New Settings</strong> buttons (same as today)</li>
+  </ul>
+</div>

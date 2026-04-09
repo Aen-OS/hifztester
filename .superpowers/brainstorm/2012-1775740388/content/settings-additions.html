@@ -1,0 +1,139 @@
+<h2>Settings Screen — New Additions</h2>
+<p class="subtitle">Two new sections added to the AyahFlow settings page, below the existing scope selector</p>
+
+<div class="split">
+  <!-- Game Length -->
+  <div class="mockup">
+    <div class="mockup-header">Game Length</div>
+    <div class="mockup-body" style="background:#0a0a0a; color:#e8e4dc; font-family:system-ui; padding:20px;">
+
+      <div style="font-size:12px; text-transform:uppercase; color:#6b7280; margin-bottom:12px; letter-spacing:0.05em;">Session Length</div>
+
+      <!-- Toggle: Questions vs Time -->
+      <div style="display:flex; background:#1a1a1a; border-radius:8px; margin-bottom:14px; overflow:hidden;">
+        <div style="flex:1; text-align:center; padding:10px; font-size:13px; background:#059669; color:white; font-weight:600;">By Questions</div>
+        <div style="flex:1; text-align:center; padding:10px; font-size:13px; color:#6b7280;">By Time</div>
+      </div>
+
+      <!-- Question count options -->
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:10px;">
+        <div style="background:#1a1a1a; border:1px solid #333; border-radius:8px; padding:10px; text-align:center; font-size:14px;">10</div>
+        <div style="background:#1a1a1a; border:1px solid #059669; border-radius:8px; padding:10px; text-align:center; font-size:14px; color:#059669; font-weight:600;">20</div>
+        <div style="background:#1a1a1a; border:1px solid #333; border-radius:8px; padding:10px; text-align:center; font-size:14px;">30</div>
+        <div style="background:#1a1a1a; border:1px solid #333; border-radius:8px; padding:10px; text-align:center; font-size:14px;">50</div>
+      </div>
+
+      <div style="font-size:11px; color:#4b5563; margin-bottom:20px;">Or choose ∞ for unlimited (end manually)</div>
+
+      <!-- Unlimited option -->
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <div style="width:18px; height:18px; border-radius:4px; border:1px solid #333; background:#1a1a1a;"></div>
+        <span style="font-size:13px; color:#9ca3af;">Unlimited (current behavior)</span>
+      </div>
+
+      <div style="margin-top:24px; border-top:1px solid #222; padding-top:16px;">
+        <div style="font-size:12px; text-transform:uppercase; color:#6b7280; margin-bottom:12px; letter-spacing:0.05em;">Time Mode Options</div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; opacity:0.4;">
+          <div style="background:#1a1a1a; border:1px solid #333; border-radius:8px; padding:10px; text-align:center; font-size:13px;">5m</div>
+          <div style="background:#1a1a1a; border:1px solid #333; border-radius:8px; padding:10px; text-align:center; font-size:13px;">10m</div>
+          <div style="background:#1a1a1a; border:1px solid #333; border-radius:8px; padding:10px; text-align:center; font-size:13px;">15m</div>
+          <div style="background:#1a1a1a; border:1px solid #333; border-radius:8px; padding:10px; text-align:center; font-size:13px;">20m</div>
+        </div>
+        <div style="font-size:11px; color:#4b5563; margin-top:6px;">Finishes current question when time expires</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Focus Mode -->
+  <div class="mockup">
+    <div class="mockup-header">Focus on Weak Areas</div>
+    <div class="mockup-body" style="background:#0a0a0a; color:#e8e4dc; font-family:system-ui; padding:20px;">
+
+      <div style="font-size:12px; text-transform:uppercase; color:#6b7280; margin-bottom:12px; letter-spacing:0.05em;">Scope Selection</div>
+
+      <!-- Toggle: Manual vs Focus -->
+      <div style="display:flex; background:#1a1a1a; border-radius:8px; margin-bottom:14px; overflow:hidden;">
+        <div style="flex:1; text-align:center; padding:10px; font-size:13px; color:#6b7280;">Manual</div>
+        <div style="flex:1; text-align:center; padding:10px; font-size:13px; background:#059669; color:white; font-weight:600;">Focus Mode</div>
+      </div>
+
+      <!-- One-tap button -->
+      <div style="background:#0f291e; border:1px solid #065f46; border-radius:8px; padding:14px; margin-bottom:16px; text-align:center;">
+        <div style="font-size:14px; font-weight:600; color:#6ee7b7; margin-bottom:4px;">Practice Weakest Areas</div>
+        <div style="font-size:11px; color:#4ade80;">Auto-selects your lowest confidence ayahs</div>
+      </div>
+
+      <!-- Granularity toggle -->
+      <div style="font-size:12px; color:#6b7280; margin-bottom:8px;">Or choose granularity:</div>
+      <div style="display:flex; background:#1a1a1a; border-radius:8px; margin-bottom:14px; overflow:hidden;">
+        <div style="flex:1; text-align:center; padding:8px; font-size:13px; background:#222; color:#e8e4dc; font-weight:500;">By Juz</div>
+        <div style="flex:1; text-align:center; padding:8px; font-size:13px; color:#6b7280;">By Surah</div>
+      </div>
+
+      <!-- Weakness ranking -->
+      <div style="font-size:12px; text-transform:uppercase; color:#6b7280; margin-bottom:8px; letter-spacing:0.05em;">Your Weakest Juz</div>
+
+      <div style="background:#1a1a1a; border-radius:8px; padding:10px 12px; margin-bottom:6px; border:1px solid #065f46;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <span style="font-size:13px;">Juz 2</span>
+            <span style="font-size:11px; color:#ef4444; margin-left:8px;">43% confidence</span>
+          </div>
+          <div style="width:18px; height:18px; border-radius:4px; background:#059669; display:flex; align-items:center; justify-content:center; font-size:11px; color:white;">✓</div>
+        </div>
+      </div>
+
+      <div style="background:#1a1a1a; border-radius:8px; padding:10px 12px; margin-bottom:6px; border:1px solid #065f46;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <span style="font-size:13px;">Juz 5</span>
+            <span style="font-size:11px; color:#f59e0b; margin-left:8px;">58% confidence</span>
+          </div>
+          <div style="width:18px; height:18px; border-radius:4px; background:#059669; display:flex; align-items:center; justify-content:center; font-size:11px; color:white;">✓</div>
+        </div>
+      </div>
+
+      <div style="background:#1a1a1a; border-radius:8px; padding:10px 12px; margin-bottom:6px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <span style="font-size:13px;">Juz 1</span>
+            <span style="font-size:11px; color:#f59e0b; margin-left:8px;">67% confidence</span>
+          </div>
+          <div style="width:18px; height:18px; border-radius:4px; border:1px solid #333; background:#1a1a1a;"></div>
+        </div>
+      </div>
+
+      <div style="background:#1a1a1a; border-radius:8px; padding:10px 12px; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <span style="font-size:13px;">Juz 3</span>
+            <span style="font-size:11px; color:#059669; margin-left:8px;">82% confidence</span>
+          </div>
+          <div style="width:18px; height:18px; border-radius:4px; border:1px solid #333; background:#1a1a1a;"></div>
+        </div>
+      </div>
+
+      <div style="font-size:11px; color:#4b5563;">Ranked by lowest confidence. Only juz you've practiced appear here.</div>
+
+      <!-- Not enough data state -->
+      <div style="margin-top:16px; border-top:1px solid #222; padding-top:14px;">
+        <div style="font-size:12px; text-transform:uppercase; color:#6b7280; margin-bottom:8px; letter-spacing:0.05em;">New User State</div>
+        <div style="background:#1a1a1a; border-radius:8px; padding:14px; text-align:center;">
+          <div style="font-size:13px; color:#6b7280;">Not enough data yet</div>
+          <div style="font-size:11px; color:#4b5563; margin-top:4px;">Play a few sessions to unlock Focus Mode</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:24px;">
+  <h3>Design notes:</h3>
+  <ul>
+    <li><strong>Game Length</strong> — toggle between question count and time limit. "Unlimited" checkbox preserves current behavior. Defaults to 20 questions.</li>
+    <li><strong>Focus Mode</strong> — replaces the manual scope selector when toggled on. One-tap "Practice Weakest" auto-selects, or user picks granularity (juz/surah) and overrides from the ranked list.</li>
+    <li><strong>Confidence colors</strong> — red &lt;50%, amber 50-75%, green &gt;75%</li>
+    <li><strong>New user state</strong> — Focus Mode shows "not enough data" until they've played enough sessions. Minimum: at least 1 session with data.</li>
+    <li><strong>The "Manual" tab</strong> shows the existing scope selector unchanged.</li>
+  </ul>
+</div>
