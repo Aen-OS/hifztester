@@ -27,6 +27,8 @@ import DiffView from "@/components/ayahflow/DiffView";
 import { diffWords } from "@/lib/normalize-arabic";
 import DisplayOptionsToggle from "@/components/ayahflow/DisplayOptionsToggle";
 import ReciterToggle from "@/components/shared/ReciterToggle";
+import ReviewScreen from "@/components/ayahflow/ReviewScreen";
+import GameTimer from "@/components/ayahflow/GameTimer";
 import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 const NEXT_DELAY_MS = 1200;
@@ -42,6 +44,8 @@ function AyahFlowGameInner() {
   const difficulty = searchParams.get("difficulty") ?? "easy";
   const testPrevious = searchParams.get("testPrevious") === "true";
   const initialMode = searchParams.get("mode") ?? "choices";
+  const lengthMode = searchParams.get("lengthMode") ?? "unlimited";
+  const lengthValue = Number(searchParams.get("lengthValue") ?? "0");
 
   const translationParam = searchParams.get("translation") ?? DEFAULT_TRANSLATION_ID;
   const transliterationParam = searchParams.get("transliteration") === "on";
@@ -60,6 +64,9 @@ function AyahFlowGameInner() {
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [phase, setPhase] = useState("next");
   const [showResults, setShowResults] = useState(false);
+  const [reviewData, setReviewData] = useState(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
   const [surahRevealed, setSurahRevealed] = useState(false);
   const [fiftyFiftyRemaining, setFiftyFiftyRemaining] = useState(3);
   const [eliminatedKeys, setEliminatedKeys] = useState([]);
@@ -69,9 +76,21 @@ function AyahFlowGameInner() {
   const [showTranslation, setShowTranslation] = useState(translationParam !== "off");
   const [showTransliteration, setShowTransliteration] = useState(transliterationParam);
   const [reciterId, setReciterId] = useState(reciterParam !== "off" ? reciterParam : null);
+  const [timeUp, setTimeUp] = useState(false);
 
   const surahCacheRef = useRef({});
   const verseMapRef = useRef(new Map());
+  const resultsRef = useRef([]);
+  const questionStartRef = useRef(Date.now());
+  const sessionStartRef = useRef(Date.now());
+
+  // Check QF auth status for review screen sync prompt
+  useEffect(() => {
+    fetch("/api/auth/quran/status")
+      .then((r) => r.json())
+      .then((d) => setIsConnected(d.connected))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!scopeType || scopeValues.length === 0) {
@@ -92,6 +111,7 @@ function AyahFlowGameInner() {
         const queue = createPromptQueue(result.verses, result.boundaryKeys);
         setPromptQueue(queue);
         setPromptIndex(0);
+        sessionStartRef.current = Date.now();
       } catch (err) {
         setError(err.message);
       } finally {
@@ -162,12 +182,99 @@ function AyahFlowGameInner() {
       setFiftyFiftyUsedThisRound(false);
       setSelectedKey(null);
       setTypingDiff(null);
+      questionStartRef.current = Date.now();
     }
 
     build();
   }, [promptQueue, promptIndex, phase, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  async function submitSession() {
+    if (resultsRef.current.length === 0) {
+      router.push("/ayahflow");
+      return;
+    }
+
+    setReviewLoading(true);
+    const durationSeconds = Math.round(
+      (Date.now() - sessionStartRef.current) / 1000
+    );
+
+    try {
+      const res = await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          game: "ayahflow",
+          settings: {
+            scopeType,
+            scopeValues,
+            difficulty,
+            testPrevious,
+            answerMode: initialMode,
+            lengthMode,
+            lengthValue,
+          },
+          duration_seconds: durationSeconds,
+          results: resultsRef.current,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setReviewData(data);
+      } else {
+        // Fallback: show basic results even if save fails
+        setReviewData({
+          score_correct: score.correct,
+          score_total: score.total,
+          duration_seconds: durationSeconds,
+          groups: [],
+          confidence_delta: null,
+        });
+      }
+    } catch {
+      setReviewData({
+        score_correct: score.correct,
+        score_total: score.total,
+        duration_seconds: Math.round(
+          (Date.now() - sessionStartRef.current) / 1000
+        ),
+        groups: [],
+        confidence_delta: null,
+      });
+    } finally {
+      setReviewLoading(false);
+      setShowResults(true);
+    }
+  }
+
+  function recordResult(verseKey, correct, userAnswer) {
+    const responseMs = Date.now() - questionStartRef.current;
+    resultsRef.current.push({
+      verse_key: verseKey,
+      correct,
+      ...(correct ? {} : { user_answer: userAnswer || null }),
+      response_ms: responseMs,
+    });
+  }
+
+  function checkGameEnd() {
+    const count = resultsRef.current.length;
+    if (lengthMode === "questions" && count >= lengthValue) {
+      return true;
+    }
+    if (timeUp) {
+      return true;
+    }
+    return false;
+  }
+
   function advance() {
+    if (checkGameEnd()) {
+      submitSession();
+      return;
+    }
+
     if (phase === "next" && testPrevious) {
       setPhase("previous");
     } else {
@@ -190,6 +297,11 @@ function AyahFlowGameInner() {
     setSelectedKey(verseKey);
 
     const isCorrect = verseKey === question.correctAnswer.verseKey;
+    recordResult(
+      question.correctAnswer.verseKey,
+      isCorrect,
+      isCorrect ? null : verseKey
+    );
     setScore((prev) => ({
       correct: prev.correct + (isCorrect ? 1 : 0),
       total: prev.total + 1,
@@ -207,6 +319,7 @@ function AyahFlowGameInner() {
 
     if (result.isMatch) {
       setSelectedKey(question.correctAnswer.verseKey);
+      recordResult(question.correctAnswer.verseKey, true, null);
       setScore((prev) => ({
         correct: prev.correct + 1,
         total: prev.total + 1,
@@ -218,6 +331,7 @@ function AyahFlowGameInner() {
     } else {
       setSelectedKey("__wrong__");
       setTypingDiff(result);
+      recordResult(question.correctAnswer.verseKey, false, typedText);
       setScore((prev) => ({
         correct: prev.correct,
         total: prev.total + 1,
@@ -231,7 +345,25 @@ function AyahFlowGameInner() {
   }
 
   function handleEnd() {
-    setShowResults(true);
+    submitSession();
+  }
+
+  const handleTimeUp = useCallback(() => {
+    setTimeUp(true);
+  }, []);
+
+  function handlePlayAgain() {
+    setShowResults(false);
+    setReviewData(null);
+    setScore({ correct: 0, total: 0 });
+    setFiftyFiftyRemaining(3);
+    setTimeUp(false);
+    resultsRef.current = [];
+    sessionStartRef.current = Date.now();
+    const newQueue = createPromptQueue(verses, boundaryKeys);
+    setPromptQueue(newQueue);
+    setPromptIndex(0);
+    setPhase("next");
   }
 
   function handleFiftyFifty() {
@@ -274,39 +406,25 @@ function AyahFlowGameInner() {
     );
   }
 
-  if (showResults) {
-    const pct =
-      score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
+  if (reviewLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold">Session Complete</h2>
-          <p className="mt-4 text-4xl font-bold text-emerald-700">
-            {score.correct}/{score.total}
-          </p>
-          <p className="mt-1 text-muted">{pct}% accuracy</p>
-          <div className="mt-8 flex gap-3">
-            <button
-              onClick={() => {
-                setShowResults(false);
-                setScore({ correct: 0, total: 0 });
-                setFiftyFiftyRemaining(3);
-                const newQueue = createPromptQueue(verses, boundaryKeys);
-                setPromptQueue(newQueue);
-                setPromptIndex(0);
-                setPhase("next");
-              }}
-              className="rounded-lg bg-emerald-700 px-6 py-2.5 text-sm font-medium text-white hover:bg-emerald-400">
-              Play Again
-            </button>
-            <button
-              onClick={() => router.push("/ayahflow")}
-              className="rounded-lg border border-border px-6 py-2.5 text-sm font-medium hover:bg-emerald-50">
-              New Settings
-            </button>
-          </div>
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-emerald-200 border-t-emerald-700" />
+          <p className="mt-4 text-sm text-muted">Saving session...</p>
         </div>
       </div>
+    );
+  }
+
+  if (showResults && reviewData) {
+    return (
+      <ReviewScreen
+        data={reviewData}
+        isConnected={isConnected}
+        onPlayAgain={handlePlayAgain}
+        onNewSettings={() => router.push("/ayahflow")}
+      />
     );
   }
 
@@ -324,10 +442,15 @@ function AyahFlowGameInner() {
         </button>
       </div>
 
-      {/* Question zone — fills middle, scrolls if needed, content centered */}
+      {/* Question zone */}
       <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto py-4">
         <div className="w-full space-y-4">
-          <ScoreCounter correct={score.correct} total={score.total} />
+          <div className="flex items-center justify-between">
+            <ScoreCounter correct={score.correct} total={score.total} />
+            {lengthMode === "time" && (
+              <GameTimer minutes={lengthValue} onTimeUp={handleTimeUp} />
+            )}
+          </div>
           <QuestionCard
             verse={question.prompt}
             direction={question.direction}
@@ -363,7 +486,7 @@ function AyahFlowGameInner() {
         </div>
       </div>
 
-      {/* Answer zone — pinned to bottom */}
+      {/* Answer zone */}
       <div className="border-t border-border bg-surface py-3">
         <AnswerModeToggle value={answerMode} onChange={setAnswerMode} />
         <div className="mt-3">

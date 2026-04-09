@@ -9,11 +9,20 @@ import AnswerModeSelector from "@/components/ayahflow/AnswerModeSelector";
 import BackButton from "@/components/BackButton";
 import DisplayOptionsSelector from "@/components/ayahflow/DisplayOptionsSelector";
 import ReciterSelector from "@/components/shared/ReciterSelector";
+import GameLengthSelector from "@/components/ayahflow/GameLengthSelector";
+import ScopeModeToggle from "@/components/ayahflow/ScopeModeToggle";
+import FocusModeSelector from "@/components/ayahflow/FocusModeSelector";
 import { DEFAULT_TRANSLATION_ID } from "@/lib/translations";
 
 export default function AyahFlowSetup() {
   const router = useRouter();
+  const [scopeMode, setScopeMode] = useState("manual");
   const [scope, setScope] = useState({ type: "surah", values: [] });
+  const [focusScope, setFocusScope] = useState({
+    granularity: "juz",
+    selected: [],
+    auto: false,
+  });
   const [difficulty, setDifficulty] = useState("easy");
   const [testPrevious, setTestPrevious] = useState(false);
   const [answerMode, setAnswerMode] = useState("choices");
@@ -21,20 +30,47 @@ export default function AyahFlowSetup() {
   const [translationId, setTranslationId] = useState(DEFAULT_TRANSLATION_ID);
   const [transliterationEnabled, setTransliterationEnabled] = useState(false);
   const [reciterId, setReciterId] = useState(null);
+  const [gameLength, setGameLength] = useState({
+    mode: "questions",
+    count: 20,
+    minutes: 10,
+  });
 
   function handleStart() {
+    let scopeType, scopeValues;
+
+    if (scopeMode === "focus" && focusScope.selected.length > 0) {
+      scopeType = focusScope.granularity === "juz" ? "juz" : "surah";
+      scopeValues = focusScope.selected.join(",");
+    } else {
+      scopeType = scope.type;
+      scopeValues = scope.values.join(",");
+    }
+
     const params = new URLSearchParams({
-      scopeType: scope.type,
-      scopeValues: scope.values.join(","),
+      scopeType,
+      scopeValues,
       difficulty,
       mode: answerMode,
       testPrevious: testPrevious.toString(),
       translation: translationEnabled ? translationId : "off",
       transliteration: transliterationEnabled ? "on" : "off",
       reciter: reciterId ?? "off",
+      lengthMode: gameLength.mode,
+      lengthValue:
+        gameLength.mode === "time"
+          ? gameLength.minutes.toString()
+          : gameLength.mode === "questions"
+            ? gameLength.count.toString()
+            : "0",
     });
     router.push(`/ayahflow/play?${params.toString()}`);
   }
+
+  const canStart =
+    scopeMode === "focus"
+      ? focusScope.selected.length > 0
+      : scope.values.length > 0;
 
   return (
     <div className="mx-auto max-w-[480px] px-4 py-12">
@@ -49,7 +85,21 @@ export default function AyahFlowSetup() {
           <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-muted">
             Scope
           </h2>
-          <ScopeSelector value={scope} onChange={setScope} />
+          <ScopeModeToggle value={scopeMode} onChange={setScopeMode} />
+          <div className="mt-4">
+            {scopeMode === "manual" ? (
+              <ScopeSelector value={scope} onChange={setScope} />
+            ) : (
+              <FocusModeSelector value={focusScope} onChange={setFocusScope} />
+            )}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-muted">
+            Session Length
+          </h2>
+          <GameLengthSelector value={gameLength} onChange={setGameLength} />
         </section>
 
         <section>
@@ -96,7 +146,7 @@ export default function AyahFlowSetup() {
 
         <button
           onClick={handleStart}
-          disabled={scope.values.length === 0}
+          disabled={!canStart}
           className="w-full rounded-lg bg-emerald-700 py-3 text-sm font-medium text-white transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Start

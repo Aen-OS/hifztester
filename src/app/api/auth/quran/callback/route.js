@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { COOKIE_OPTIONS, TOKEN_COOKIE_NAMES } from "@/lib/qf-auth";
+import { getOrCreateUser, findUserByQfSub, linkQfSub } from "@/lib/user-identity";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -82,6 +83,46 @@ export async function GET(request) {
   // Clear temporary PKCE cookies
   cookieStore.delete(TOKEN_COOKIE_NAMES.oauthState);
   cookieStore.delete(TOKEN_COOKIE_NAMES.codeVerifier);
+
+  // Link Quran.com identity to Supabase user
+  if (tokenData.id_token) {
+    try {
+      // Decode JWT payload (no verification needed — we just got it from QF)
+      const payload = JSON.parse(
+        Buffer.from(tokenData.id_token.split(".")[1], "base64").toString()
+      );
+      const qfSub = payload.sub;
+
+      if (qfSub) {
+        const hasItqaanCookie = cookieStore.has("itqaan_uid");
+
+        if (hasItqaanCookie) {
+          // User has local identity — link QF sub to it
+          const { userId } = await getOrCreateUser();
+          await linkQfSub(userId, qfSub);
+        } else {
+          // New device — check if QF account already linked to a user
+          const existingUser = await findUserByQfSub(qfSub);
+          if (existingUser) {
+            // Cross-device merge: set cookie to existing user's token
+            cookieStore.set("itqaan_uid", existingUser.anon_token, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax",
+              path: "/",
+              maxAge: 365 * 24 * 60 * 60,
+            });
+          } else {
+            // Brand new user with QF account — create and link
+            const { userId } = await getOrCreateUser();
+            await linkQfSub(userId, qfSub);
+          }
+        }
+      }
+    } catch {
+      // Non-fatal — user linking failed but auth still works
+    }
+  }
 
   return Response.redirect(`${baseUrl}/`);
 }

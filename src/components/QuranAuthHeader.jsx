@@ -70,7 +70,7 @@ export default function QuranAuthHeader() {
           <a
             href="/api/auth/quran"
             className="text-xs text-emerald-700 underline underline-offset-2 hover:text-emerald-400 transition-colors">
-            Connect Quran.com
+            Connect Quran.com to sync your progress across devices
           </a>
           {feedbackButton}
         </div>

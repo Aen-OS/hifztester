@@ -20,9 +20,13 @@ function normalizeVerse(raw) {
   const transliteration = words
     .map((w) => w.transliteration?.text ?? "")
     .join(" ");
-  const translation =
+  const rawTranslation =
     raw.translations?.[0]?.text ??
     words.map((w) => w.translation?.text ?? "").join(" ");
+  // Strip footnote numbers like <sup>1</sup> and standalone digits from Hilali & Khan style translations
+  const translation = rawTranslation
+    .replace(/<sup[^>]*>.*?<\/sup>/gi, "")
+    .replace(/<\/?[^>]+>/g, "");
 
   return {
     id: raw.id,
