@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import {
   generateCodeVerifier,
   generateCodeChallenge,
@@ -15,7 +16,7 @@ export async function GET() {
   const scopes = process.env.QF_SCOPES;
 
   if (!authUrl || !clientId || !baseUrl || !scopes) {
-    return NextResponse.json(
+    return Response.json(
       { error: "Missing OAuth2 configuration" },
       { status: 500 }
     );
@@ -25,6 +26,16 @@ export async function GET() {
   const nonce = generateNonce();
   const codeVerifier = generateCodeVerifier();
   const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+  const cookieStore = await cookies();
+  cookieStore.set(TOKEN_COOKIE_NAMES.oauthState, state, {
+    ...COOKIE_OPTIONS,
+    maxAge: 600,
+  });
+  cookieStore.set(TOKEN_COOKIE_NAMES.codeVerifier, codeVerifier, {
+    ...COOKIE_OPTIONS,
+    maxAge: 600,
+  });
 
   const params = new URLSearchParams({
     response_type: "code",
@@ -37,16 +48,5 @@ export async function GET() {
     code_challenge_method: "S256",
   });
 
-  const response = NextResponse.redirect(`${authUrl}/oauth2/auth?${params.toString()}`);
-
-  response.cookies.set(TOKEN_COOKIE_NAMES.oauthState, state, {
-    ...COOKIE_OPTIONS,
-    maxAge: 600,
-  });
-  response.cookies.set(TOKEN_COOKIE_NAMES.codeVerifier, codeVerifier, {
-    ...COOKIE_OPTIONS,
-    maxAge: 600,
-  });
-
-  return response;
+  redirect(`${authUrl}/oauth2/auth?${params.toString()}`);
 }
